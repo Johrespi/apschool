@@ -1,6 +1,6 @@
 # AP School
 
-AP School is a web application made for students for the Programming Foundations course in ESPOL. It helps students to practice their python abilities through coding. AP School contains similar content described in the course syllabus.
+AP School is a web application made for students of Programming Foundations course at ESPOL. It helps students to practice their python abilities through coding. AP School contains content similar to the course syllabus.
 
 ## Getting Started
 
