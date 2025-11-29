@@ -4,5 +4,5 @@ CREATE TABLE user_auth_github (
     github_id BIGINT UNIQUE NOT NULL
 );
 
--- +goose down
+-- +goose Down
 DROP TABLE user_auth_github;

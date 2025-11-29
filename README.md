@@ -1,6 +1,6 @@
-# Project apschool
+# AP School
 
-One Paragraph of project description goes here
+AP School is a web application made for students for the Programming Foundations course in ESPOL. It helps students to practice their python abilities through coding. AP School contains similar content described in the course syllabus.
 
 ## Getting Started
 
@@ -51,3 +51,11 @@ Clean up binary from the last build:
 ```bash
 make clean
 ```
+
+Execute migrations
+```bash
+source .env && goose -dir internal/migrations postgres "$DATABASE_URL" up
+```
+
+## Author
+Johann Ramírez - johrespi@espol.edu.ec
