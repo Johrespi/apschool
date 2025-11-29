@@ -147,7 +147,6 @@ CDN Pyodide: jsDelivr (gratis)
 7. Si pasa:
    └── POST /api/submissions al backend
    └── Backend guarda en PostgreSQL
-   └── Actualiza leaderboard
 8. Si falla:
    └── Muestra error (no hay request al backend)
 ```
@@ -159,45 +158,44 @@ CDN Pyodide: jsDelivr (gratis)
 ### Tabla: users
 ```sql
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    github_id INTEGER UNIQUE NOT NULL,
-    username VARCHAR(50) NOT NULL,
-    avatar_url VARCHAR(500),
-    score INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT NOW()
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    github_id BIGINT UNIQUE NOT NULL,
+    username TEXT NOT NULL,
+    avatar_url TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ```
 
 ### Tabla: challenges
 ```sql
 CREATE TABLE challenges (
-    id SERIAL PRIMARY KEY,
-    slug VARCHAR(100) UNIQUE NOT NULL,
-    title VARCHAR(255) NOT NULL,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
     description TEXT NOT NULL,
-    difficulty VARCHAR(20), -- 'easy', 'medium', 'hard'
-    category VARCHAR(50), -- 'basics', 'data-science', 'algorithms'
-    packages TEXT[], -- ['pandas', 'numpy'] o []
-    template TEXT NOT NULL, -- código inicial
-    test_code TEXT NOT NULL, -- tests que valida Pyodide
-    hints TEXT[],
-    points INTEGER DEFAULT 10,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT NOW()
+    difficulty TEXT NOT NULL,
+    category TEXT NOT NULL,
+    packages TEXT[] NOT NULL DEFAULT '{}',
+    template TEXT NOT NULL,
+    test_code TEXT NOT NULL,
+    hints TEXT[] NOT NULL DEFAULT '{}',
+    points INTEGER NOT NULL DEFAULT 10,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ```
 
 ### Tabla: submissions
 ```sql
 CREATE TABLE submissions (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    challenge_id INTEGER REFERENCES challenges(id),
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    challenge_id BIGINT NOT NULL REFERENCES challenges(id) ON DELETE CASCADE,
     code TEXT NOT NULL,
     passed BOOLEAN NOT NULL,
-    execution_time FLOAT, -- en ms (medido en el browser)
-    created_at TIMESTAMP DEFAULT NOW(),
-    UNIQUE(user_id, challenge_id) -- solo una solución por challenge
+    execution_time FLOAT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(user_id, challenge_id)
 );
 ```
 
