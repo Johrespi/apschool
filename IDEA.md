@@ -112,16 +112,16 @@ Framework: Angular 17+ (Standalone Components)
 Editor: Monaco Editor
 Ejecución Python: Pyodide
 UI: Angular Material o Tailwind
-Hosting: Netlify (gratis)
+Hosting: Railway/ Render
 ```
 
 ### Backend (Railway)
 ```yaml
 Lenguaje: Go
-Framework: Fiber o Echo
+Framework: Chi
 Database: PostgreSQL (Supabase)
 Auth: GitHub OAuth
-Hosting: Railway (gratis tier)
+Hosting: Railway / Render (gratis tier)
 ```
 
 ### Servicios Externos
