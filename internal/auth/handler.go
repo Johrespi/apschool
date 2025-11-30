@@ -15,6 +15,17 @@ func NewHandler(service *Service) *Handler {
 	return &Handler{service: service}
 }
 
+type githubAccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+}
+
+type githubUser struct {
+	ID        int    `json:"id"`
+	Login     string `json:"login"`
+	AvatarURL string `json:"avatar_url"`
+}
+
 func (h *Handler) GithubLogin(w http.ResponseWriter, r *http.Request) {
 	clientID := os.Getenv("GITHUB_CLIENT_ID")
 	redirectURI := os.Getenv("GITHUB_REDIRECT_URI")
