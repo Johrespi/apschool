@@ -2,15 +2,68 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"apschool/internal/server"
+	"apschool/internal/auth"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/joho/godotenv/autoload"
 )
+
+var (
+	database = os.Getenv("APSCHOOL_DB_DATABASE")
+	password = os.Getenv("APSCHOOL_DB_PASSWORD")
+	username = os.Getenv("APSCHOOL_DB_USERNAME")
+	port     = os.Getenv("APSCHOOL_DB_PORT")
+	host     = os.Getenv("APSCHOOL_DB_HOST")
+	schema   = os.Getenv("APSCHOOL_DB_SCHEMA")
+)
+
+type application struct {
+	db   *sql.DB
+	auth *auth.Handler
+}
+
+func main() {
+
+	db, err := openDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	app := &application{
+		db:   db,
+		auth: auth.NewHandler(auth.NewService(auth.NewRepository(db))),
+	}
+
+	server := &http.Server{
+		Addr:         fmt.Sprintf(":%s", port),
+		Handler:      app.routes(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+
+	done := make(chan bool, 1)
+	go gracefulShutdown(server, done)
+
+	log.Printf("Starting server on port %s", server.Addr)
+
+	err = server.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		panic(fmt.Sprintf("http server error: %s", err))
+	}
+
+	<-done
+	log.Println("Graceful shutdown complete.")
+}
 
 func gracefulShutdown(apiServer *http.Server, done chan bool) {
 	// Create context that listens for the interrupt signal from the OS.
@@ -37,22 +90,21 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 	done <- true
 }
 
-func main() {
+func openDB() (*sql.DB, error) {
 
-	server := server.NewServer()
-
-	// Create a done channel to signal when the shutdown is complete
-	done := make(chan bool, 1)
-
-	// Run graceful shutdown in a separate goroutine
-	go gracefulShutdown(server, done)
-
-	err := server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
-		panic(fmt.Sprintf("http server error: %s", err))
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
+	db, err := sql.Open("pgx", connStr)
+	if err != nil {
+		return nil, err
 	}
 
-	// Wait for the graceful shutdown to complete
-	<-done
-	log.Println("Graceful shutdown complete.")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := db.PingContext(ctx); err != nil {
+		return nil, err
+	}
+
+	return db, nil
+
 }

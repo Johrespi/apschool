@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"apschool/internal/auth"
 	"apschool/internal/helper"
 
 	"github.com/go-chi/chi/v5"
@@ -25,6 +26,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Get("/", s.ping)
 
 	r.Get("/health", s.healthHandler)
+
+	// Auth routes
+	authHandler := auth.NewHandler(auth.NewService(auth.NewRepository(s.db.GetDB())))
+
+	r.Get("/api/auth/github", authHandler.GithubLogin)
+	r.Get("/api/auth/github/callback", authHandler.GithubCallback)
+	r.Get("/api/auth/me", authHandler.GetMe)
 
 	return r
 }
