@@ -1,0 +1,50 @@
+package main
+
+import (
+	"apschool/internal/helper"
+	"context"
+	"net/http"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+)
+
+func (app *application) routes() http.Handler {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
+
+	r.Get("/", app.ping)
+	r.Get("/health", app.health)
+
+	//Auth routes
+	r.Get("/api/auth/github", app.auth.GithubLogin)
+	r.Get("/api/auth/github/callback", app.auth.GithubCallback)
+	r.Get("/api/auth/me", app.auth.GetMe)
+
+	return r
+}
+
+func (app *application) ping(w http.ResponseWriter, r *http.Request) {
+	helper.WriteJSON(w, http.StatusOK, map[string]string{"message": "pong"}, nil)
+}
+
+func (app *application) health(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 1*time.Second)
+	defer cancel()
+	err := app.db.PingContext(ctx)
+	if err != nil {
+		helper.WriteJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "down"}, nil)
+		return
+	}
+	helper.WriteJSON(w, http.StatusOK, map[string]string{"status": "up"}, nil)
+}
