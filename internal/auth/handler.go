@@ -11,6 +11,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var (
+	httpClient = &http.Client{Timeout: 10 * time.Second}
+)
+
 type Handler struct {
 	service *Service
 }
@@ -116,8 +120,7 @@ func exchangeCodeForToken(code string) (string, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return "", err
 	}
@@ -139,8 +142,7 @@ func getGithubUser(accessToken string) (*githubUser, error) {
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -175,8 +177,7 @@ func getGithubEmail(accessToken string) (string, error) {
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return "", err
 	}
