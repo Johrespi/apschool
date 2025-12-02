@@ -8,7 +8,7 @@ import (
 func ErrorResponse(w http.ResponseWriter, status int, message any) {
 	err := WriteJSON(w, status, map[string]any{"error": message}, nil)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
