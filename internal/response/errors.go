@@ -20,3 +20,19 @@ func ServerError(w http.ResponseWriter, r *http.Request, logger *slog.Logger, er
 func ValidationError(w http.ResponseWriter, errors map[string]string) {
 	ErrorResponse(w, http.StatusUnprocessableEntity, errors)
 }
+
+func BadRequest(w http.ResponseWriter, message string) {
+	ErrorResponse(w, http.StatusBadRequest, message)
+}
+
+func NotFound(w http.ResponseWriter) {
+	ErrorResponse(w, http.StatusNotFound, "resource not found")
+}
+
+func Unauthorized(w http.ResponseWriter) {
+	ErrorResponse(w, http.StatusUnauthorized, "unauthorized")
+}
+
+func Forbidden(w http.ResponseWriter) {
+	ErrorResponse(w, http.StatusForbidden, "forbidden")
+}
