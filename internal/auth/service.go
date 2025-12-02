@@ -15,7 +15,7 @@ func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
 
-func (s *Service) CreateUserByGithub(ctx context.Context, githubID int, username, avatarURL string) (*User, error) {
+func (s *Service) CreateUserByGithub(ctx context.Context, githubID int, username, email, avatarURL string) (*User, error) {
 
 	// Verify if the user exists
 	user, err := s.repo.GetUserByGithubID(ctx, githubID)
@@ -24,7 +24,7 @@ func (s *Service) CreateUserByGithub(ctx context.Context, githubID int, username
 	}
 
 	// If not, then create user
-	user, err = s.repo.CreateUser(ctx, username, avatarURL)
+	user, err = s.repo.CreateUser(ctx, username, email, avatarURL)
 	if err != nil {
 		return nil, err
 	}
