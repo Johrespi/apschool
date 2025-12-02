@@ -18,12 +18,13 @@ import (
 )
 
 var (
-	database = os.Getenv("APSCHOOL_DB_DATABASE")
-	password = os.Getenv("APSCHOOL_DB_PASSWORD")
-	username = os.Getenv("APSCHOOL_DB_USERNAME")
-	port     = os.Getenv("APSCHOOL_DB_PORT")
-	host     = os.Getenv("APSCHOOL_DB_HOST")
-	schema   = os.Getenv("APSCHOOL_DB_SCHEMA")
+	database   = os.Getenv("APSCHOOL_DB_DATABASE")
+	password   = os.Getenv("APSCHOOL_DB_PASSWORD")
+	username   = os.Getenv("APSCHOOL_DB_USERNAME")
+	port       = os.Getenv("APSCHOOL_DB_PORT")
+	host       = os.Getenv("APSCHOOL_DB_HOST")
+	schema     = os.Getenv("APSCHOOL_DB_SCHEMA")
+	serverPort = os.Getenv("PORT")
 )
 
 type application struct {
@@ -44,7 +45,7 @@ func main() {
 	}
 
 	server := &http.Server{
-		Addr:         fmt.Sprintf(":%s", port),
+		Addr:         fmt.Sprintf(":%s", serverPort),
 		Handler:      app.routes(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
