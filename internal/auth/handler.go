@@ -167,13 +167,13 @@ func generateJWT(userID int) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func getGithubEmail(acessToken string) (string, error) {
+func getGithubEmail(accessToken string) (string, error) {
 	req, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
 	if err != nil {
 		return "", err
 	}
 
-	req.Header.Set("Authorization", "Bearer "+acessToken)
+	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
