@@ -13,14 +13,14 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db: db}
 }
 
-func (r *Repository) CreateUser(ctx context.Context, username, avatarURL string) (*User, error) {
+func (r *Repository) CreateUser(ctx context.Context, username, email, avatarURL string) (*User, error) {
 
 	var user User
-	query := `INSERT INTO users (username, avatar_url)
-	VALUES ($1, $2)
-	RETURNING id, username, avatar_url, created_at`
+	query := `INSERT INTO users (username, email, avatar_url)
+	VALUES ($1, $2, $3)
+	RETURNING id, username, email, avatar_url, created_at, updated_at`
 
-	err := r.db.QueryRowContext(ctx, query, username, avatarURL).Scan(&user.ID, &user.Username, &user.AvatarURL, &user.CreatedAt)
+	err := r.db.QueryRowContext(ctx, query, username, email, avatarURL).Scan(&user.ID, &user.Username, &user.Email, &user.AvatarURL, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return nil, err
 
@@ -33,10 +33,10 @@ func (r *Repository) CreateUser(ctx context.Context, username, avatarURL string)
 func (r *Repository) GetUserByID(ctx context.Context, id int) (*User, error) {
 	var user User
 
-	query := `SELECT id, username, avatar_url, created_at FROM users
+	query := `SELECT id, username, email, avatar_url, created_at, updated_at FROM users
 	WHERE id = $1`
 
-	err := r.db.QueryRowContext(ctx, query, id).Scan(&user.ID, &user.Username, &user.AvatarURL, &user.CreatedAt)
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&user.ID, &user.Username, &user.Email, &user.AvatarURL, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -48,12 +48,12 @@ func (r *Repository) GetUserByGithubID(ctx context.Context, githubID int) (*User
 
 	var user User
 
-	query := `SELECT u.id, u.username, u.avatar_url, u.created_at
+	query := `SELECT u.id, u.username, u.email, u.avatar_url, u.created_at, u.updated_at
 	FROM users u
 	JOIN user_auth_github g ON u.id = g.user_id
 	WHERE g.github_id = $1`
 
-	err := r.db.QueryRowContext(ctx, query, githubID).Scan(&user.ID, &user.Username, &user.AvatarURL, &user.CreatedAt)
+	err := r.db.QueryRowContext(ctx, query, githubID).Scan(&user.ID, &user.Username, &user.Email, &user.AvatarURL, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -71,4 +71,10 @@ func (r *Repository) CreateGithubAuth(ctx context.Context, userID, githubID int)
 	}
 
 	return nil
+}
+
+func (r *Repository) GetUserByEmail(ctx context.Context, email string) (*User, error) {
+	// TODO: implement this method
+
+	return nil, nil
 }

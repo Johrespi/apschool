@@ -62,7 +62,13 @@ func (h *Handler) GithubCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.CreateUserByGithub(r.Context(), ghUser.ID, ghUser.Login, ghUser.AvatarURL)
+	email, err := getGithubEmail(accessToken)
+	if err != nil {
+		http.Error(w, "failed to get github user email", http.StatusInternalServerError)
+		return
+	}
+
+	user, err := h.service.CreateUserByGithub(r.Context(), ghUser.ID, ghUser.Login, email, ghUser.AvatarURL)
 	if err != nil {
 		http.Error(w, "failed to create or get user", http.StatusInternalServerError)
 		return
@@ -159,4 +165,34 @@ func generateJWT(userID int) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))
+}
+
+func getGithubEmail(accessToken string) (string, error) {
+	req, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	var emails []GithubEmail
+	if err := json.NewDecoder(resp.Body).Decode(&emails); err != nil {
+		return "", err
+	}
+
+	for _, email := range emails {
+		if email.Primary && email.Verified {
+			return email.Email, nil
+		}
+	}
+
+	return "", fmt.Errorf("no primary verified email found")
+
 }
