@@ -1,7 +1,7 @@
 package main
 
 import (
-	"apschool/internal/helper"
+	"apschool/internal/response"
 	"context"
 	"net/http"
 	"time"
@@ -35,7 +35,7 @@ func (app *application) routes() http.Handler {
 }
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
-	helper.WriteJSON(w, http.StatusOK, map[string]string{"message": "pong"}, nil)
+	response.WriteJSON(w, http.StatusOK, map[string]string{"message": "pong"}, nil)
 }
 
 func (app *application) health(w http.ResponseWriter, r *http.Request) {
@@ -43,8 +43,8 @@ func (app *application) health(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	err := app.db.PingContext(ctx)
 	if err != nil {
-		helper.WriteJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "down"}, nil)
+		response.WriteJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "down"}, nil)
 		return
 	}
-	helper.WriteJSON(w, http.StatusOK, map[string]string{"status": "up"}, nil)
+	response.WriteJSON(w, http.StatusOK, map[string]string{"status": "up"}, nil)
 }
