@@ -2,6 +2,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -54,19 +55,19 @@ func (h *Handler) GithubCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessToken, err := exchangeCodeForToken(code)
+	accessToken, err := exchangeCodeForToken(r.Context(), code)
 	if err != nil {
 		http.Error(w, "failed to exchange code for token", http.StatusInternalServerError)
 		return
 	}
 
-	ghUser, err := getGithubUser(accessToken)
+	ghUser, err := getGithubUser(r.Context(), accessToken)
 	if err != nil {
 		http.Error(w, "failed to get github user", http.StatusInternalServerError)
 		return
 	}
 
-	email, err := getGithubEmail(accessToken)
+	email, err := getGithubEmail(r.Context(), accessToken)
 	if err != nil {
 		http.Error(w, "failed to get github user email", http.StatusInternalServerError)
 		return
@@ -101,7 +102,7 @@ func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func exchangeCodeForToken(code string) (string, error) {
+func exchangeCodeForToken(ctx context.Context, code string) (string, error) {
 	clientID := os.Getenv("GITHUB_CLIENT_ID")
 	clientSecret := os.Getenv("GITHUB_CLIENT_SECRET")
 
@@ -113,7 +114,7 @@ func exchangeCodeForToken(code string) (string, error) {
 
 	jsonBody, _ := json.Marshal(body)
 
-	req, err := http.NewRequest("POST", "https://github.com/login/oauth/access_token", bytes.NewBuffer(jsonBody))
+	req, err := http.NewRequestWithContext(ctx, "POST", "https://github.com/login/oauth/access_token", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return "", err
 	}
@@ -134,8 +135,8 @@ func exchangeCodeForToken(code string) (string, error) {
 	return tokenResp.AccessToken, nil
 }
 
-func getGithubUser(accessToken string) (*githubUser, error) {
-	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+func getGithubUser(ctx context.Context, accessToken string) (*githubUser, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://api.github.com/user", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -169,8 +170,8 @@ func generateJWT(userID int) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func getGithubEmail(accessToken string) (string, error) {
-	req, err := http.NewRequest("GET", "https://api.github.com/user/emails", nil)
+func getGithubEmail(ctx context.Context, accessToken string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://api.github.com/user/emails", nil)
 	if err != nil {
 		return "", err
 	}
