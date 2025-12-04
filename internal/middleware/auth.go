@@ -23,7 +23,6 @@ func RequireAuth(next http.Handler) http.Handler {
 		}
 
 		// Get token (Bearer <token>)
-
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
 			response.Unauthorized(w)
@@ -33,7 +32,6 @@ func RequireAuth(next http.Handler) http.Handler {
 		token := parts[1]
 
 		// Validate token
-
 		userID, err := auth.ValidateJWT(token)
 		if err != nil {
 			response.Unauthorized(w)
@@ -41,7 +39,6 @@ func RequireAuth(next http.Handler) http.Handler {
 		}
 
 		// Save to context
-
 		ctx := context.WithValue(r.Context(), UserIDKey, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
