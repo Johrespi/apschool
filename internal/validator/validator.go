@@ -3,6 +3,8 @@ package validator
 import (
 	"regexp"
 	"slices"
+	"strings"
+	"unicode/utf8"
 )
 
 var (
@@ -49,4 +51,16 @@ func Unique[T comparable](values []T) bool {
 	}
 
 	return len(values) == len(uniqueValues)
+}
+
+func NotBlank(value string) bool {
+	return strings.TrimSpace(value) != ""
+}
+
+func MinChars(value string, n int) bool {
+	return utf8.RuneCountInString(value) >= n
+}
+
+func MaxChars(value string, n int) bool {
+	return utf8.RuneCountInString(value) <= n
 }
