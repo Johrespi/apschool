@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -28,11 +29,14 @@ var (
 )
 
 type application struct {
-	db   *sql.DB
-	auth *auth.Handler
+	db     *sql.DB
+	logger *slog.Logger
+	auth   *auth.Handler
 }
 
 func main() {
+
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	db, err := openDB()
 	if err != nil {
@@ -40,8 +44,9 @@ func main() {
 	}
 
 	app := &application{
-		db:   db,
-		auth: auth.NewHandler(auth.NewService(auth.NewRepository(db))),
+		db:     db,
+		logger: logger,
+		auth:   auth.NewHandler(auth.NewService(auth.NewRepository(db)), logger),
 	}
 
 	server := &http.Server{
