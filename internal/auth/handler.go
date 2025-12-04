@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"apschool/internal/response"
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
@@ -18,10 +20,11 @@ var (
 
 type Handler struct {
 	service *Service
+	logger  *slog.Logger
 }
 
-func NewHandler(service *Service) *Handler {
-	return &Handler{service: service}
+func NewHandler(service *Service, logger *slog.Logger) *Handler {
+	return &Handler{service: service, logger: logger}
 }
 
 type githubAccessTokenResponse struct {
@@ -51,37 +54,37 @@ func (h *Handler) GithubLogin(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GithubCallback(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	if code == "" {
-		http.Error(w, "code not found", http.StatusBadRequest)
+		response.BadRequest(w, "code not found")
 		return
 	}
 
 	accessToken, err := exchangeCodeForToken(r.Context(), code)
 	if err != nil {
-		http.Error(w, "failed to exchange code for token", http.StatusInternalServerError)
+		response.ServerError(w, r, h.logger, err)
 		return
 	}
 
 	ghUser, err := getGithubUser(r.Context(), accessToken)
 	if err != nil {
-		http.Error(w, "failed to get github user", http.StatusInternalServerError)
+		response.ServerError(w, r, h.logger, err)
 		return
 	}
 
 	email, err := getGithubEmail(r.Context(), accessToken)
 	if err != nil {
-		http.Error(w, "failed to get github user email", http.StatusInternalServerError)
+		response.ServerError(w, r, h.logger, err)
 		return
 	}
 
 	user, err := h.service.CreateUserByGithub(r.Context(), ghUser.ID, ghUser.Login, email, ghUser.AvatarURL)
 	if err != nil {
-		http.Error(w, "failed to create or get user", http.StatusInternalServerError)
+		response.ServerError(w, r, h.logger, err)
 		return
 	}
 
 	token, err := generateJWT(user.ID)
 	if err != nil {
-		http.Error(w, "failed to generate JWT", http.StatusInternalServerError)
+		response.ServerError(w, r, h.logger, err)
 		return
 	}
 
@@ -94,12 +97,11 @@ func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.service.GetUserByID(r.Context(), userID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		response.NotFound(w)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	response.WriteJSON(w, http.StatusOK, user, nil)
 }
 
 func exchangeCodeForToken(ctx context.Context, code string) (string, error) {
