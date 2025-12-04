@@ -10,8 +10,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/golang-jwt/jwt/v5"
 )
 
 var (
@@ -82,7 +80,7 @@ func (h *Handler) GithubCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := generateJWT(user.ID)
+	token, err := GenerateJWT(user.ID)
 	if err != nil {
 		response.ServerError(w, r, h.logger, err)
 		return
@@ -158,18 +156,6 @@ func getGithubUser(ctx context.Context, accessToken string) (*githubUser, error)
 	}
 
 	return &user, nil
-}
-
-func generateJWT(userID int) (string, error) {
-	secret := os.Getenv("JWT_SECRET")
-
-	claims := jwt.MapClaims{
-		"user_id": userID,
-		"exp":     time.Now().Add(24 * time.Hour).Unix(),
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(secret))
 }
 
 func getGithubEmail(ctx context.Context, accessToken string) (string, error) {
