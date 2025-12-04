@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"apschool/internal/auth"
 	"apschool/internal/response"
 	"context"
 	"net/http"
@@ -33,7 +34,7 @@ func RequireAuth(next http.Handler) http.Handler {
 
 		// Validate token
 
-		userID, err := validateJWT(token)
+		userID, err := auth.ValidateJWT(token)
 		if err != nil {
 			response.Unauthorized(w)
 			return
