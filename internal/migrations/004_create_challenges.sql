@@ -1,7 +1,7 @@
 -- +goose Up
 CREATE TABLE IF NOT EXISTS challenges (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    external_id INT UNIQUE NOT NULL,
+    challenge_number INT UNIQUE NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     template TEXT NOT NULL,
