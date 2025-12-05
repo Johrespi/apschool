@@ -29,13 +29,12 @@ func (app *application) routes() http.Handler {
 	//Auth routes
 	r.Get("/api/auth/github/login", app.auth.GithubLogin)
 	r.Get("/api/auth/github/callback", app.auth.GithubCallback)
-	r.Get("/api/auth/me", app.auth.GetMe)
 
 	return r
 }
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
-	response.WriteJSON(w, http.StatusOK, map[string]string{"message": "pong"}, nil)
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"message": "pong"}, nil)
 }
 
 func (app *application) health(w http.ResponseWriter, r *http.Request) {
@@ -43,8 +42,8 @@ func (app *application) health(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	err := app.db.PingContext(ctx)
 	if err != nil {
-		response.WriteJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "down"}, nil)
+		response.WriteJSON(w, http.StatusServiceUnavailable, response.Envelope{"status": "down"}, nil)
 		return
 	}
-	response.WriteJSON(w, http.StatusOK, map[string]string{"status": "up"}, nil)
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"status": "up"}, nil)
 }

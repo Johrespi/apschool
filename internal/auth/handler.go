@@ -90,18 +90,6 @@ func (h *Handler) GithubCallback(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("%s/auth/callback?token=%s", frontendURL, token), http.StatusTemporaryRedirect)
 }
 
-func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
-	userID := 1
-
-	user, err := h.service.GetUserByID(r.Context(), userID)
-	if err != nil {
-		response.NotFound(w)
-		return
-	}
-
-	response.WriteJSON(w, http.StatusOK, user, nil)
-}
-
 func exchangeCodeForToken(ctx context.Context, code string) (string, error) {
 	clientID := os.Getenv("GITHUB_CLIENT_ID")
 	clientSecret := os.Getenv("GITHUB_CLIENT_SECRET")
