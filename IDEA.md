@@ -1,6 +1,6 @@
-# Python Practice Platform
+# AP School - Python Practice Platform
 
-Plataforma web para practicar Python con challenges interactivos. El código se ejecuta en el navegador del usuario usando Pyodide (Python compilado a WebAssembly).
+Plataforma web para practicar Python con challenges interactivos. El codigo se ejecuta en el navegador del usuario usando Pyodide (Python compilado a WebAssembly).
 
 ---
 
@@ -16,13 +16,13 @@ Plataforma web para practicar Python con challenges interactivos. El código se 
 │  └─────────────┘    └─────────────┘    └────────────────────┘  │
 │         │                  │                                    │
 │         │                  ▼                                    │
-│         │         Ejecuta código Python                         │
+│         │         Ejecuta codigo Python                         │
 │         │         Valida tests                                  │
 │         │                  │                                    │
 │         │                  ▼                                    │
-│         │         ¿Pasó los tests?                              │
+│         │         Paso los tests?                               │
 │         │            │         │                                │
-│         │           SÍ        NO                                │
+│         │           SI        NO                                │
 │         │            │         │                                │
 │         │            ▼         ▼                                │
 │         │      Enviar al   Mostrar error                        │
@@ -32,21 +32,25 @@ Plataforma web para practicar Python con challenges interactivos. El código se 
           │            │
           │            ▼
 ┌─────────┼────────────────────────────────────────────────────────┐
-│         │       BACKEND (Go en Railway)                          │
+│         │       BACKEND (Go)                                     │
 │         │                                                        │
 │         ▼                                                        │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │  API REST                                                │    │
-│  │  - POST /api/auth/github     (GitHub OAuth)              │    │
-│  │  - GET  /api/challenges      (listar challenges)         │    │
-│  │  - POST /api/submissions     (guardar solución)          │    │
-│  │  - GET  /api/leaderboard     (ranking)                   │    │
+│  │  - GET  /api/auth/github/login     (GitHub OAuth)        │    │
+│  │  - GET  /api/auth/github/callback  (GitHub callback)     │    │
+│  │  - GET  /api/challenges?category=  (listar challenges)   │    │
+│  │  - GET  /api/challenges/:id        (obtener challenge)   │    │
+│  │  - POST /api/submissions           (guardar solucion)    │    │
+│  │  - GET  /api/submissions           (mis submissions)     │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                              │                                   │
 │                              ▼                                   │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │  PostgreSQL (Supabase)                                   │    │
+│  │  PostgreSQL                                              │    │
 │  │  - users                                                 │    │
+│  │  - user_auth_github                                      │    │
+│  │  - user_auth_email (futuro)                              │    │
 │  │  - challenges                                            │    │
 │  │  - submissions                                           │    │
 │  └─────────────────────────────────────────────────────────┘    │
@@ -56,100 +60,45 @@ Plataforma web para practicar Python con challenges interactivos. El código se 
 
 ---
 
-## ¿Por qué Pyodide?
+## Stack Tecnologico
 
-Pyodide es el intérprete de Python (CPython) compilado a WebAssembly. Esto permite ejecutar Python directamente en el navegador.
+### Frontend
+- **Framework**: Angular 17+ (Standalone Components)
+- **Editor**: Monaco Editor
+- **Ejecucion Python**: Pyodide
+- **UI**: Angular Material o Tailwind
+
+### Backend
+- **Lenguaje**: Go
+- **Router**: Chi
+- **Database**: PostgreSQL
+- **Auth**: GitHub OAuth (email/password futuro)
+- **Migraciones**: Goose
+
+---
+
+## Por que Pyodide?
+
+Pyodide es el interprete de Python (CPython) compilado a WebAssembly. Ejecuta Python directamente en el navegador.
 
 | Aspecto | Beneficio |
 |---------|-----------|
 | Costo | $0 - usa la CPU del usuario |
-| Seguridad | Código malicioso solo afecta al usuario que lo escribe |
-| Latencia | Instantánea (no hay round-trip al servidor) |
+| Seguridad | Codigo malicioso solo afecta al usuario que lo escribe |
+| Latencia | Instantanea (no hay round-trip al servidor) |
 | Escalabilidad | 1 o 100,000 usuarios = mismo costo |
-| Simplicidad | No necesitas Docker, VMs, ni sandboxing |
 
-### Limitaciones de Pyodide
+### Librerias en Pyodide
 
-- Primera carga: ~10-15MB (se cachea después)
-- No disponible: `subprocess`, `threading` real, file system, network
-- Algunas librerías no funcionan (pero numpy, pandas sí)
+Pyodide detecta automaticamente los imports y carga las librerias necesarias:
 
-Para challenges de práctica (algoritmos, estructuras de datos, strings), estas limitaciones no importan.
-
----
-
-## Librerías Disponibles en Pyodide
-
-Pyodide soporta 200+ librerías. Las más relevantes:
-
-| Categoría | Librerías |
-|-----------|-----------|
-| **Data Science** | pandas, numpy, scipy |
-| **Machine Learning** | scikit-learn, xgboost, lightgbm |
-| **Visualización** | matplotlib, bokeh, altair |
-| **Matemáticas** | sympy, mpmath, statsmodels |
-| **Utilidades** | regex, pyyaml, requests |
-
-### Cómo funcionan las librerías por challenge
-
-Cada challenge especifica qué librerías necesita en el campo `packages`:
-
-```
-packages: []           → Solo Python puro (instantáneo)
-packages: ["pandas"]   → Carga pandas antes de ejecutar (2-3s primera vez)
-packages: ["numpy", "scipy"] → Carga ambas librerías
+```javascript
+// El frontend detecta y carga librerias antes de ejecutar
+await pyodide.loadPackagesFromImports(userCode);
+await pyodide.runPython(userCode);
 ```
 
-Las librerías se cachean en el browser, así que solo la primera carga es lenta.
-
----
-
-## Stack Tecnológico
-
-### Frontend (Netlify)
-```yaml
-Framework: Angular 17+ (Standalone Components)
-Editor: Monaco Editor
-Ejecución Python: Pyodide
-UI: Angular Material o Tailwind
-Hosting: Railway/ Render
-```
-
-### Backend (Railway)
-```yaml
-Lenguaje: Go
-Framework: Chi
-Database: PostgreSQL (Supabase)
-Auth: GitHub OAuth
-Hosting: Railway / Render (gratis tier)
-```
-
-### Servicios Externos
-```yaml
-Database: Supabase (PostgreSQL gratis)
-Auth: GitHub OAuth (gratis)
-CDN Pyodide: jsDelivr (gratis)
-```
-
----
-
-## Flujo de Usuario
-
-```
-1. Usuario visita la app (Netlify sirve Angular)
-2. Login con GitHub OAuth
-3. Ve lista de challenges
-4. Selecciona un challenge
-5. Escribe código en Monaco Editor
-6. Click "Ejecutar"
-   └── Pyodide ejecuta Python EN EL BROWSER
-   └── Valida contra los tests del challenge
-7. Si pasa:
-   └── POST /api/submissions al backend
-   └── Backend guarda en PostgreSQL
-8. Si falla:
-   └── Muestra error (no hay request al backend)
-```
+Librerias soportadas: numpy, pandas, scipy, scikit-learn, matplotlib, etc.
 
 ---
 
@@ -159,10 +108,27 @@ CDN Pyodide: jsDelivr (gratis)
 ```sql
 CREATE TABLE users (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    github_id BIGINT UNIQUE NOT NULL,
     username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     avatar_url TEXT NOT NULL DEFAULT '',
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+### Tabla: user_auth_github
+```sql
+CREATE TABLE user_auth_github (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    github_id BIGINT UNIQUE NOT NULL
+);
+```
+
+### Tabla: user_auth_email (futuro)
+```sql
+CREATE TABLE user_auth_email (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    password_hash TEXT NOT NULL
 );
 ```
 
@@ -171,17 +137,15 @@ CREATE TABLE users (
 CREATE TABLE challenges (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     slug TEXT UNIQUE NOT NULL,
+    category TEXT NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    difficulty TEXT NOT NULL,
-    category TEXT NOT NULL,
-    packages TEXT[] NOT NULL DEFAULT '{}',
     template TEXT NOT NULL,
     test_code TEXT NOT NULL,
-    hints TEXT[] NOT NULL DEFAULT '{}',
-    points INTEGER NOT NULL DEFAULT 10,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    hints TEXT NOT NULL DEFAULT '',
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ```
 
@@ -193,8 +157,8 @@ CREATE TABLE submissions (
     challenge_id BIGINT NOT NULL REFERENCES challenges(id) ON DELETE CASCADE,
     code TEXT NOT NULL,
     passed BOOLEAN NOT NULL,
-    execution_time FLOAT NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE(user_id, challenge_id)
 );
 ```
@@ -205,27 +169,83 @@ CREATE TABLE submissions (
 
 ### Auth
 ```
-GET  /api/auth/github          - Redirige a GitHub OAuth
-GET  /api/auth/github/callback - Callback de GitHub
-GET  /api/auth/me              - Usuario actual
-POST /api/auth/logout          - Cerrar sesión
+GET  /api/auth/github/login     - Redirige a GitHub OAuth
+GET  /api/auth/github/callback  - Callback de GitHub, retorna JWT
 ```
 
 ### Challenges
 ```
-GET  /api/challenges           - Listar todos los challenges
-GET  /api/challenges/:slug     - Ver un challenge
+GET  /api/challenges?category=  - Listar challenges por categoria
+GET  /api/challenges/:id        - Obtener un challenge completo
 ```
 
 ### Submissions
 ```
-POST /api/submissions          - Guardar solución exitosa
-GET  /api/submissions          - Mis submissions
+POST /api/submissions           - Guardar solucion exitosa
+GET  /api/submissions           - Mis submissions
 ```
 
-### Leaderboard
+---
+
+## Estructura de Challenges (Archivos)
+
+Los challenges se organizan en carpetas por unidad:
+
 ```
-GET  /api/leaderboard          - Top usuarios por score
+challenges/
+└── unit-1-intro/
+    └── 001-hello-world/
+        ├── README.md       # Descripcion del challenge
+        ├── template.py     # Codigo inicial (incluye imports si necesita librerias)
+        ├── tests.py        # Tests de validacion
+        └── hints.md        # Pistas para el estudiante
+```
+
+### Ejemplo: README.md
+```markdown
+# Hello World
+
+## Descripcion
+Escribe un programa que imprima "Hello, World!" en la consola.
+
+## Ejemplo
+### Output esperado
+Hello, World!
+
+## Instrucciones
+1. Usa la funcion `print()` para mostrar el mensaje.
+```
+
+### Ejemplo: template.py
+```python
+# Escribe tu codigo aqui
+
+```
+
+### Ejemplo: tests.py
+```python
+import sys
+from io import StringIO
+
+captured_output = StringIO()
+sys.stdout = captured_output
+
+# El codigo del usuario se ejecuta ANTES de este archivo
+output = captured_output.getvalue().strip()
+
+assert output == "Hello, World!", f"Se esperaba 'Hello, World!' pero se obtuvo '{output}'"
+print("ALL_TESTS_PASSED")
+```
+
+### Ejemplo: hints.md
+```markdown
+# Hints
+
+## Hint 1
+La funcion `print()` muestra texto en la consola.
+
+## Hint 2
+Los strings en Python se escriben entre comillas: `"texto"` o `'texto'`.
 ```
 
 ---
@@ -233,333 +253,122 @@ GET  /api/leaderboard          - Top usuarios por score
 ## Estructura del Proyecto
 
 ```
-python-practice/
-├── frontend/                      # Angular (Netlify)
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── services/
-│   │   │   │   ├── pyodide.service.ts    # Ejecutar Python
-│   │   │   │   ├── auth.service.ts       # GitHub OAuth
-│   │   │   │   └── api.service.ts        # HTTP al backend
-│   │   │   ├── components/
-│   │   │   │   ├── challenge-list/
-│   │   │   │   ├── challenge-detail/
-│   │   │   │   ├── code-editor/
-│   │   │   │   └── leaderboard/
-│   │   │   └── app.routes.ts
-│   │   └── index.html                    # Carga Pyodide CDN
-│   └── package.json
-│
-├── backend/                       # Go (Railway)
-│   ├── cmd/
-│   │   └── server/
-│   │       └── main.go
-│   ├── internal/
-│   │   ├── handlers/
-│   │   │   ├── auth.go
-│   │   │   ├── challenges.go
-│   │   │   ├── submissions.go
-│   │   │   └── leaderboard.go
-│   │   ├── models/
-│   │   │   ├── user.go
-│   │   │   ├── challenge.go
-│   │   │   └── submission.go
-│   │   ├── database/
-│   │   │   └── postgres.go
-│   │   └── middleware/
-│   │       └── auth.go
-│   ├── go.mod
-│   └── Dockerfile
-│
-└── challenges/                    # Challenges en JSON (se cargan a DB)
-    ├── 001-hello-world.json
-    ├── 002-two-sum.json
-    └── ...
+apschool/
+├── cmd/
+│   └── api/
+│       ├── main.go              # Entry point
+│       └── routes.go            # Definicion de rutas
+├── internal/
+│   ├── auth/                    # Modulo de autenticacion
+│   │   ├── handler.go
+│   │   ├── jwt.go
+│   │   ├── models.go
+│   │   ├── repository.go
+│   │   └── service.go
+│   ├── challenges/              # Modulo de challenges
+│   │   ├── handler.go
+│   │   ├── models.go
+│   │   ├── repository.go
+│   │   └── service.go
+│   ├── middleware/
+│   │   └── auth.go              # JWT middleware
+│   ├── migrations/              # Migraciones SQL (Goose)
+│   │   ├── 001_create_users.sql
+│   │   ├── 002_create_user_auth_github.sql
+│   │   ├── 003_create_user_auth_email.sql
+│   │   ├── 004_create_challenges.sql
+│   │   └── 005_create_submissions.sql
+│   ├── response/
+│   │   ├── errors.go
+│   │   └── json.go
+│   └── validator/
+│       └── validator.go
+├── challenges/                  # Challenges en archivos
+│   └── unit-1-intro/
+│       └── 001-hello-world/
+├── .air.toml                    # Hot reload config
+├── docker-compose.yml
+├── go.mod
+├── go.sum
+├── Makefile
+└── README.md
 ```
 
 ---
 
-## Ejemplo: Challenges JSON
+## Flujo de Usuario
 
-### Challenge sin librerías (básico)
-```json
-{
-  "slug": "two-sum",
-  "title": "Two Sum",
-  "description": "Dada una lista de números y un target, retorna los índices de los dos números que suman el target.",
-  "difficulty": "easy",
-  "category": "basics",
-  "packages": [],
-  "points": 10,
-  "template": "def two_sum(nums: list, target: int) -> list:\n    # Tu código aquí\n    pass",
-  "test_code": "assert two_sum([2,7,11,15], 9) == [0,1], 'Test 1 falló'\nassert two_sum([3,2,4], 6) == [1,2], 'Test 2 falló'\nassert two_sum([3,3], 6) == [0,1], 'Test 3 falló'\nprint('ALL_TESTS_PASSED')",
-  "hints": [
-    "Puedes usar un diccionario para guardar los números que ya viste",
-    "Para cada número, calcula el complemento (target - num)"
-  ]
-}
 ```
-
-### Challenge con Pandas (data science)
-```json
-{
-  "slug": "rolling-mean",
-  "title": "Media Móvil",
-  "description": "Calcula la media móvil de 3 días para una lista de precios.",
-  "difficulty": "medium",
-  "category": "data-science",
-  "packages": ["pandas"],
-  "points": 20,
-  "template": "import pandas as pd\n\ndef rolling_mean(prices: list) -> list:\n    # Tu código aquí\n    pass",
-  "test_code": "result = rolling_mean([1, 2, 3, 4, 5])\nassert len(result) == 5, 'Debe retornar 5 elementos'\nassert result[2] == 2.0, 'El tercer elemento debe ser 2.0'\nassert result[4] == 4.0, 'El quinto elemento debe ser 4.0'\nprint('ALL_TESTS_PASSED')",
-  "hints": [
-    "Usa pd.Series(prices).rolling(3).mean()",
-    "Convierte el resultado a lista con .tolist()"
-  ]
-}
-```
-
-### Challenge con NumPy (algoritmos numéricos)
-```json
-{
-  "slug": "matrix-multiply",
-  "title": "Multiplicación de Matrices",
-  "description": "Multiplica dos matrices usando NumPy.",
-  "difficulty": "medium",
-  "category": "algorithms",
-  "packages": ["numpy"],
-  "points": 15,
-  "template": "import numpy as np\n\ndef matrix_multiply(a: list, b: list) -> list:\n    # Tu código aquí\n    pass",
-  "test_code": "result = matrix_multiply([[1, 2], [3, 4]], [[5, 6], [7, 8]])\nassert result == [[19, 22], [43, 50]], 'Multiplicación incorrecta'\nprint('ALL_TESTS_PASSED')",
-  "hints": [
-    "Usa np.array() para convertir las listas",
-    "Usa np.dot() o el operador @ para multiplicar"
-  ]
-}
+1. Usuario visita la app
+2. Login con GitHub OAuth
+3. Ve lista de challenges por categoria
+4. Selecciona un challenge
+5. Escribe codigo en Monaco Editor
+6. Click "Ejecutar"
+   └── Pyodide carga librerias si hay imports
+   └── Pyodide ejecuta Python EN EL BROWSER
+   └── Valida contra los tests del challenge
+7. Si pasa:
+   └── POST /api/submissions al backend
+   └── Backend guarda en PostgreSQL
+8. Si falla:
+   └── Muestra error (no hay request al backend)
 ```
 
 ---
 
-## PyodideService (Angular)
+## MVP Checklist
 
-```typescript
-import { Injectable } from '@angular/core';
+### Backend
+- [x] Estructura del proyecto (cmd/api, internal/)
+- [x] Configuracion de Chi router
+- [x] Migraciones de base de datos
+- [x] Response helpers (JSON, errors)
+- [x] Validator
+- [x] Auth: GitHub OAuth login/callback
+- [x] Auth: JWT generation y middleware
+- [x] Challenges: Model, Repository, Service, Handler
+- [ ] Challenges: Conectar rutas en routes.go
+- [ ] Submissions: Model, Repository, Service, Handler
+- [ ] Submissions: Conectar rutas
 
-declare global {
-  interface Window {
-    loadPyodide: () => Promise<any>;
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class PyodideService {
-  private pyodide: any = null;
-  private loading: Promise<any> | null = null;
-  private loadedPackages: Set<string> = new Set();
-
-  async init(): Promise<void> {
-    if (this.pyodide) return;
-    if (this.loading) {
-      await this.loading;
-      return;
-    }
-    this.loading = window.loadPyodide();
-    this.pyodide = await this.loading;
-  }
-
-  async loadPackages(packages: string[]): Promise<void> {
-    const toLoad = packages.filter(pkg => !this.loadedPackages.has(pkg));
-    if (toLoad.length === 0) return;
-    
-    await this.pyodide.loadPackage(toLoad);
-    toLoad.forEach(pkg => this.loadedPackages.add(pkg));
-  }
-
-  async runWithTests(
-    userCode: string, 
-    testCode: string,
-    packages: string[] = []
-  ): Promise<TestResult> {
-    await this.init();
-    
-    // Cargar librerías si el challenge las requiere
-    if (packages.length > 0) {
-      await this.loadPackages(packages);
-    }
-
-    const fullCode = `
-${userCode}
-
-${testCode}
-`;
-
-    const startTime = performance.now();
-    
-    try {
-      // Capturar stdout
-      this.pyodide.runPython(`
-import sys
-from io import StringIO
-sys.stdout = StringIO()
-      `);
-
-      this.pyodide.runPython(fullCode);
-      const output = this.pyodide.runPython('sys.stdout.getvalue()');
-      const executionTime = performance.now() - startTime;
-
-      return {
-        passed: output.includes('ALL_TESTS_PASSED'),
-        output,
-        error: null,
-        executionTime
-      };
-    } catch (error: any) {
-      return {
-        passed: false,
-        output: '',
-        error: error.message,
-        executionTime: performance.now() - startTime
-      };
-    }
-  }
-}
-
-interface TestResult {
-  passed: boolean;
-  output: string;
-  error: string | null;
-  executionTime: number;
-}
-```
-
----
-
-## index.html (cargar Pyodide)
-
-```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Python Practice</title>
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js"></script>
-</head>
-<body>
-  <app-root></app-root>
-</body>
-</html>
-```
-
----
-
-## Costos
-
-| Servicio | Costo |
-|----------|-------|
-| Netlify (frontend) | $0 |
-| Railway (backend) | $0 (free tier: 500 hrs/mes) |
-| Supabase (PostgreSQL) | $0 (free tier: 500MB) |
-| GitHub OAuth | $0 |
-| Pyodide CDN | $0 |
-| **Total** | **$0/mes** |
-
----
-
-## MVP - Funcionalidades
-
-### Fase 1 (MVP)
-- [ ] Login con GitHub
-- [ ] Listar challenges
-- [ ] Editor de código (Monaco)
-- [ ] Ejecutar código con Pyodide
-- [ ] Validar tests
-- [ ] Guardar submissions
-- [ ] Leaderboard básico
-
-### Fase 2
-- [ ] Perfil de usuario
-- [ ] Filtrar challenges por dificultad
-- [ ] Hints
-- [ ] Historial de submissions
-- [ ] Tema oscuro/claro
-
-### Fase 3
-- [ ] Más challenges
-- [ ] Badges/logros
-- [ ] Estadísticas de usuario
-- [ ] PWA (offline)
+### Frontend (Angular)
+- [ ] Setup proyecto Angular
+- [ ] PyodideService
+- [ ] AuthService (GitHub OAuth)
+- [ ] Monaco Editor integration
+- [ ] Challenge list component
+- [ ] Challenge detail component
+- [ ] Submissions history
 
 ---
 
 ## Desarrollo Local
 
-### Frontend
-```bash
-cd frontend
-npm install
-npm start
-# http://localhost:4200
-```
+### Requisitos
+- Go 1.21+
+- Docker (para PostgreSQL)
 
 ### Backend
 ```bash
-cd backend
-go mod tidy
-go run cmd/server/main.go
-# http://localhost:8080
+# Iniciar base de datos
+make docker-run
+
+# Ejecutar migraciones
+source .env && goose -dir internal/migrations postgres "$DATABASE_URL" up
+
+# Iniciar servidor con hot reload
+make watch
+
+# O sin hot reload
+make run
 ```
 
-### Variables de Entorno
-
+### Variables de Entorno (.env)
 ```bash
-# Backend (.env)
-DATABASE_URL=postgres://user:pass@host:5432/dbname
+DATABASE_URL=postgres://user:pass@localhost:5432/apschool?sslmode=disable
 GITHUB_CLIENT_ID=xxx
 GITHUB_CLIENT_SECRET=xxx
 JWT_SECRET=xxx
 FRONTEND_URL=http://localhost:4200
 ```
-
----
-
-## Deployment
-
-### Frontend → Netlify
-1. Conectar repo a Netlify
-2. Build command: `npm run build`
-3. Publish directory: `dist/frontend`
-
-### Backend → Railway
-1. Conectar repo a Railway
-2. Railway detecta Go automáticamente
-3. Configurar variables de entorno
-
-### Database → Supabase
-1. Crear proyecto en Supabase
-2. Copiar connection string
-3. Ejecutar migraciones
-
----
-
-## Seguridad
-
-| Riesgo | Solución |
-|--------|----------|
-| Loop infinito | Corre en el browser del usuario, no afecta al servidor |
-| Código malicioso | Sandbox de WebAssembly, no puede acceder al sistema |
-| Inyección SQL | Prepared statements en Go |
-| XSS | Angular sanitiza por defecto |
-| CSRF | Tokens JWT en header Authorization |
-
----
-
-## Resumen
-
-Esta arquitectura es simple, escalable y **completamente gratis**:
-
-1. **Angular** sirve la UI desde Netlify
-2. **Pyodide** ejecuta Python en el browser (cero costo de servidor)
-3. **Go** maneja auth y persistencia en Railway
-4. **Supabase** almacena usuarios, challenges y submissions
-
-El código Python nunca toca tu servidor. Solo guardas: "usuario X completó challenge Y".
