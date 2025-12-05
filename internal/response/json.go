@@ -9,9 +9,11 @@ import (
 	"strings"
 )
 
-func WriteJSON(w http.ResponseWriter, status int, data any, headers http.Header) error {
+type Envelope map[string]any
 
-	js, err := json.Marshal(data)
+func WriteJSON(w http.ResponseWriter, status int, data Envelope, headers http.Header) error {
+
+	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
 	}
