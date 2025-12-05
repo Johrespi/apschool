@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"apschool/internal/auth"
+	"apschool/internal/challenges"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
@@ -29,9 +30,10 @@ var (
 )
 
 type application struct {
-	db     *sql.DB
-	logger *slog.Logger
-	auth   *auth.Handler
+	db         *sql.DB
+	logger     *slog.Logger
+	auth       *auth.Handler
+	challenges *challenges.Handler
 }
 
 func main() {
@@ -44,11 +46,11 @@ func main() {
 	}
 
 	app := &application{
-		db:     db,
-		logger: logger,
-		auth:   auth.NewHandler(auth.NewService(auth.NewRepository(db)), logger),
+		db:         db,
+		logger:     logger,
+		auth:       auth.NewHandler(auth.NewService(auth.NewRepository(db)), logger),
+		challenges: challenges.NewHandler(challenges.NewService(challenges.NewRepository(db)), logger),
 	}
-
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%s", serverPort),
 		Handler:      app.routes(),
