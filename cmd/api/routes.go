@@ -29,7 +29,6 @@ func (app *application) routes() http.Handler {
 	//Auth routes
 	r.Get("/api/auth/github/login", app.auth.GithubLogin)
 	r.Get("/api/auth/github/callback", app.auth.GithubCallback)
-	r.Get("/api/auth/me", app.auth.GetMe)
 
 	return r
 }
