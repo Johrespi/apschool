@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS submissions (
 );
 
 -- +goose Down
-DRO TABLE IF EXISTS submissions;
+DROP TABLE IF EXISTS submissions;
