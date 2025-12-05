@@ -19,7 +19,7 @@ func NewHandler(service *Service, logger *slog.Logger) *Handler {
 	return &Handler{service: service, logger: logger}
 }
 
-func (h *Handler) ListChallenges(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ListChallengesHandler(w http.ResponseWriter, r *http.Request) {
 
 	category := r.URL.Query().Get("category")
 	if category == "" {
@@ -37,7 +37,7 @@ func (h *Handler) ListChallenges(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *Handler) GetChallenge(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetChallengeHandler(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {

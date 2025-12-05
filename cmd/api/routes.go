@@ -30,6 +30,10 @@ func (app *application) routes() http.Handler {
 	r.Get("/api/auth/github/login", app.auth.GithubLogin)
 	r.Get("/api/auth/github/callback", app.auth.GithubCallback)
 
+	// Challenges routes
+	r.Get("/api/challenges", app.challenges.ListChallengesHandler)
+	r.Get("/api/challenges/{id}", app.challenges.GetChallengeHandler)
+
 	return r
 }
 
