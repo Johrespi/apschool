@@ -30,9 +30,10 @@ func (h *Handler) ListChallenges(w http.ResponseWriter, r *http.Request) {
 	challenges, err := h.service.GetChallenges(r.Context(), category)
 	if err != nil {
 		response.ServerError(w, r, h.logger, err)
+		return
 	}
 
-	response.WriteJSON(w, http.StatusOK, challenges, nil)
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"challenges": challenges}, nil)
 
 }
 
@@ -54,5 +55,5 @@ func (h *Handler) GetChallenge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.WriteJSON(w, http.StatusOK, challenge, nil)
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"challenge": challenge}, nil)
 }
