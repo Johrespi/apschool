@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS challenges (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     slug TEXT UNIQUE NOT NULL,
+    category TEXT NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     template TEXT NOT NULL,
