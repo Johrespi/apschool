@@ -1,3 +1,6 @@
+-include .env
+export
+
 # Simple Makefile for a Go project
 
 # Build the application
@@ -59,5 +62,16 @@ watch:
                 exit 1; \
             fi; \
         fi
+migrate-up:
+	@echo "Applying database migrations..."
+	@goose -dir internal/migrations postgres "${DATABASE_URL}" up
 
-.PHONY: all build run test clean watch docker-run docker-down itest
+migrate-down:
+	@echo "Reverting database migrations..."
+	@goose -dir internal/migrations postgres "${DATABASE_URL}" down
+
+migrate-status:
+	@echo "Checking migration status..."
+	@goose -dir internal/migrations postgres "${DATABASE_URL}" status
+
+.PHONY: all build run test clean watch docker-run docker-down itest migrate-up migrate-down migrate-status
