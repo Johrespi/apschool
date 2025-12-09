@@ -72,6 +72,7 @@ func (h *Handler) GetSubmissionHandler(w http.ResponseWriter, r *http.Request) {
 	challengeID, err := strconv.Atoi(challengeIDStr)
 	if err != nil {
 		response.BadRequest(w, "invalid challenge_id")
+		return
 	}
 
 	submission, err := h.service.GetUserSubmission(r.Context(), userID, challengeID)
