@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	mw "apschool/internal/middleware"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -33,6 +35,13 @@ func (app *application) routes() http.Handler {
 	// Challenges routes
 	r.Get("/api/challenges", app.challenges.ListChallengesHandler)
 	r.Get("/api/challenges/{id}", app.challenges.GetChallengeHandler)
+
+	r.Route("/api/submissions", func(r chi.Router) {
+		r.Use(mw.RequireAuth)
+		r.Post("/", app.submissions.CreateSubmissionsHandler)
+		r.Get("/", app.submissions.GetSubmissionsHandler)
+		r.Get("/{challenge_id}", app.submissions.GetSubmissionHandler)
+	})
 
 	return r
 }
