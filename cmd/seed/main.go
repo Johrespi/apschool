@@ -93,6 +93,37 @@ func loadChallenges(basePath string) ([]Challenge, error) {
 
 func loadChallenge(path, category, slug string) (Challenge, error) {
 	readme, err := readFile(filepath.Join(path, "README.md"))
+	if err != nil {
+		return Challenge{}, fmt.Errorf("README.md :%w", err)
+	}
+
+	title, description := parseReadme(readme)
+
+	template, err := readFile(file.Join(path, "template.py"))
+	if err != nil {
+		return Challenge{}, fmt.Errorf("template.py :%w", err)
+	}
+
+	testCode, err := readFile(filepath.Join(path, "tests.py"))
+	if err != nil {
+		return Challenge{}, fmt.Errorf("tests.py :%w", err)
+	}
+
+	hints, err := readFile(filepath.Join(path, "hints.md"))
+	if err != nil {
+		return Challenge{}, fmt.Errorf("hints.md :%w", err)
+	}
+
+	return Challenge{
+		Slug:        slug,
+		Category:    category,
+		Title:       title,
+		Description: description,
+		Template:    template,
+		TestCode:    testCode,
+		Hints:       hints,
+	}, nil
+
 }
 
 func readFile(path string) (string, error) {
