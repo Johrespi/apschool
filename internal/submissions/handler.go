@@ -7,6 +7,9 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type Handler struct {
@@ -18,7 +21,7 @@ func NewHandler(service *Service, logger *slog.Logger) *Handler {
 	return &Handler{service: service, logger: logger}
 }
 
-func (h *Handler) CreateSubmissions(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateSubmissionsHandler(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(middleware.UserIDKey).(int)
 
 	var submission Submission
@@ -48,4 +51,38 @@ func (h *Handler) CreateSubmissions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.WriteJSON(w, http.StatusCreated, response.Envelope{"submission": submission}, nil)
+}
+
+func (h *Handler) GetSubmissionsHandler(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value(middleware.UserIDKey).(int)
+
+	submissions, err := h.service.GetUserSubmissions(r.Context(), userID)
+	if err != nil {
+		response.ServerError(w, r, h.logger, err)
+		return
+	}
+
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"submissions": submissions}, nil)
+}
+
+func (h *Handler) GetSubmissionHandler(w http.ResponseWriter, r *http.Request) {
+
+	userID := r.Context().Value(middleware.UserIDKey).(int)
+	challengeIDStr := chi.URLParam(r, "challenge_id")
+	challengeID, err := strconv.Atoi(challengeIDStr)
+	if err != nil {
+		response.BadRequest(w, "invalid challenge_id")
+	}
+
+	submission, err := h.service.GetUserSubmission(r.Context(), userID, challengeID)
+	if err != nil {
+		if errors.Is(err, ErrSubmissionNotFound) {
+			response.NotFound(w)
+			return
+		}
+		response.ServerError(w, r, h.logger, err)
+		return
+	}
+
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"submission": submission}, nil)
 }
