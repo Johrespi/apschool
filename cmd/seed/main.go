@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
@@ -100,4 +101,23 @@ func readFile(path string) (string, error) {
 		return "", err
 	}
 	return string(content), nil
+}
+
+func parseReadme(content string) (title, description string) {
+	lines := strings.SplitN(content, "\n", 2)
+
+	if len(lines) == 0 {
+		return "", ""
+	}
+
+	// Extract title from the first line
+	title = strings.TrimPrefix(lines[0], "# ")
+	// Remove any extra whitespace at the beginning and end
+	title = strings.TrimSpace(title)
+
+	if len(lines) > 1 {
+		description = strings.TrimSpace(lines[1])
+	}
+
+	return title, description
 }
