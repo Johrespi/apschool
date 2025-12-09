@@ -121,3 +121,21 @@ func parseReadme(content string) (title, description string) {
 
 	return title, description
 }
+
+func upsertChallenge(db *sql.DB, c Challenge) error {
+	query := `
+	INSERT INTO challenges(slug, category, title, description, template, test_code, hints)
+	VALUES($1, $2, $3, $4, $5, $6, $7)
+	ON CONFLICT (slug) DO UPDATE SET
+		category = $2,
+		title = $3,
+		description = $4,
+		template = $5,
+		test_code = $6,
+		hints = $7;
+		updated_at = NOW()
+	`
+
+	_, err := db.Exec(query, c.Slug, c.Category, c.Title, c.Description, c.Template, c.TestCode, c.Hints)
+	return err
+}
