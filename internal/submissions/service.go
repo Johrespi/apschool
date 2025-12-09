@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-var ErrSubmissionNotPassed = errors.New("submission not found")
+var ErrSubmissionNotPassed = errors.New("submission did not pass the tests")
 
 type Service struct {
 	repo *Repository
