@@ -21,7 +21,6 @@ func (s *Service) CreateSubmission(ctx context.Context, userID int, submission *
 	}
 
 	submission.UserID = userID
-	submission.Passed = true
 
 	return s.repo.Create(ctx, submission)
 }
