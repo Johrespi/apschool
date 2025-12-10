@@ -255,50 +255,55 @@ Los strings en Python se escriben entre comillas: `"texto"` o `'texto'`.
 
 ```
 apschool/
-├── cmd/
-│   ├── api/
-│   │   ├── main.go              # Entry point
-│   │   └── routes.go            # Definicion de rutas
-│   └── seed/
-│       └── main.go              # Script para cargar challenges a la DB
-├── internal/
-│   ├── auth/                    # Modulo de autenticacion
-│   │   ├── handler.go
-│   │   ├── jwt.go
-│   │   ├── models.go
-│   │   ├── repository.go
-│   │   └── service.go
-│   ├── challenges/              # Modulo de challenges
-│   │   ├── handler.go
-│   │   ├── models.go
-│   │   ├── repository.go
-│   │   └── service.go
-│   ├── submissions/             # Modulo de submissions
-│   │   ├── handler.go
-│   │   ├── models.go
-│   │   ├── repository.go
-│   │   └── service.go
-│   ├── middleware/
-│   │   └── auth.go              # JWT middleware
-│   ├── migrations/              # Migraciones SQL (Goose)
-│   │   ├── 001_create_users.sql
-│   │   ├── 002_create_user_auth_github.sql
-│   │   ├── 003_create_user_auth_email.sql
-│   │   ├── 004_create_challenges.sql
-│   │   └── 005_create_submissions.sql
-│   ├── response/
-│   │   ├── errors.go
-│   │   └── json.go
-│   └── validator/
-│       └── validator.go
-├── challenges/                  # Challenges en archivos
-│   └── unit-1-intro/
-│       └── 001-hello-world/
-├── .air.toml                    # Hot reload config
-├── docker-compose.yml
-├── go.mod
-├── go.sum
-├── Makefile
+├── server/                      # Backend Go
+│   ├── cmd/
+│   │   ├── api/
+│   │   │   ├── main.go          # Entry point
+│   │   │   └── routes.go        # Definicion de rutas
+│   │   └── seed/
+│   │       └── main.go          # Script para cargar challenges a la DB
+│   ├── internal/
+│   │   ├── auth/                # Modulo de autenticacion
+│   │   │   ├── handler.go
+│   │   │   ├── jwt.go
+│   │   │   ├── models.go
+│   │   │   ├── repository.go
+│   │   │   └── service.go
+│   │   ├── challenges/          # Modulo de challenges
+│   │   │   ├── handler.go
+│   │   │   ├── models.go
+│   │   │   ├── repository.go
+│   │   │   └── service.go
+│   │   ├── submissions/         # Modulo de submissions
+│   │   │   ├── handler.go
+│   │   │   ├── models.go
+│   │   │   ├── repository.go
+│   │   │   └── service.go
+│   │   ├── middleware/
+│   │   │   └── auth.go          # JWT middleware
+│   │   ├── migrations/          # Migraciones SQL (Goose)
+│   │   │   ├── 001_create_users.sql
+│   │   │   ├── 002_create_user_auth_github.sql
+│   │   │   ├── 003_create_user_auth_email.sql
+│   │   │   ├── 004_create_challenges.sql
+│   │   │   └── 005_create_submissions.sql
+│   │   ├── response/
+│   │   │   ├── errors.go
+│   │   │   └── json.go
+│   │   └── validator/
+│   │       └── validator.go
+│   ├── challenges/              # Challenges en archivos
+│   │   └── unit-1-intro/
+│   │       └── 001-hello-world/
+│   ├── .air.toml                # Hot reload config
+│   ├── .env                     # Variables de entorno
+│   ├── .gitignore
+│   ├── docker-compose.yml
+│   ├── go.mod
+│   ├── go.sum
+│   └── Makefile
+├── web/                         # Frontend Angular 
+├── IDEA.md
 └── README.md
 ```
 
@@ -360,6 +365,8 @@ apschool/
 
 ### Backend
 ```bash
+cd server
+
 # Iniciar base de datos
 make docker-run
 
