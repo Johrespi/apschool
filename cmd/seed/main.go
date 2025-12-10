@@ -36,6 +36,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
+
+	challenges, err := loadChallenges("challenges")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	count := 0
+	for _, c := range challenges {
+		err := upsertChallenge(db, c)
+		if err != nil {
+			log.Printf("Error upserting challenge %s: %v", c.Slug, err)
+			continue
+		}
+		count++
+		log.Printf("Upserted challenge: %s (%s)", c.Slug, c.Category)
+	}
 }
 
 func openDB() (*sql.DB, error) {
@@ -99,7 +116,7 @@ func loadChallenge(path, category, slug string) (Challenge, error) {
 
 	title, description := parseReadme(readme)
 
-	template, err := readFile(file.Join(path, "template.py"))
+	template, err := readFile(filepath.Join(path, "template.py"))
 	if err != nil {
 		return Challenge{}, fmt.Errorf("template.py :%w", err)
 	}
@@ -163,7 +180,7 @@ func upsertChallenge(db *sql.DB, c Challenge) error {
 		description = $4,
 		template = $5,
 		test_code = $6,
-		hints = $7;
+		hints = $7,
 		updated_at = NOW()
 	`
 
