@@ -62,6 +62,8 @@ watch:
                 exit 1; \
             fi; \
         fi
+
+# Migrations
 migrate-up:
 	@echo "Applying database migrations..."
 	@goose -dir internal/migrations postgres "${DATABASE_URL}" up
@@ -74,4 +76,8 @@ migrate-status:
 	@echo "Checking migration status..."
 	@goose -dir internal/migrations postgres "${DATABASE_URL}" status
 
-.PHONY: all build run test clean watch docker-run docker-down itest migrate-up migrate-down migrate-status
+# Seed
+seed:
+	@go run cmd/seed/main.go
+
+.PHONY: all build run test clean watch docker-run docker-down itest migrate-up migrate-down migrate-status seed
