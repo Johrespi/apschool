@@ -181,8 +181,9 @@ GET  /api/challenges/:id        - Obtener un challenge completo
 
 ### Submissions
 ```
-POST /api/submissions           - Guardar solucion exitosa
-GET  /api/submissions           - Mis submissions
+POST /api/submissions              - Guardar solucion exitosa
+GET  /api/submissions              - Mis submissions
+GET  /api/submissions/:challenge_id - Obtener mi codigo para un challenge
 ```
 
 ---
@@ -255,9 +256,11 @@ Los strings en Python se escriben entre comillas: `"texto"` o `'texto'`.
 ```
 apschool/
 ├── cmd/
-│   └── api/
-│       ├── main.go              # Entry point
-│       └── routes.go            # Definicion de rutas
+│   ├── api/
+│   │   ├── main.go              # Entry point
+│   │   └── routes.go            # Definicion de rutas
+│   └── seed/
+│       └── main.go              # Script para cargar challenges a la DB
 ├── internal/
 │   ├── auth/                    # Modulo de autenticacion
 │   │   ├── handler.go
@@ -266,6 +269,11 @@ apschool/
 │   │   ├── repository.go
 │   │   └── service.go
 │   ├── challenges/              # Modulo de challenges
+│   │   ├── handler.go
+│   │   ├── models.go
+│   │   ├── repository.go
+│   │   └── service.go
+│   ├── submissions/             # Modulo de submissions
 │   │   ├── handler.go
 │   │   ├── models.go
 │   │   ├── repository.go
@@ -328,9 +336,10 @@ apschool/
 - [x] Auth: GitHub OAuth login/callback
 - [x] Auth: JWT generation y middleware
 - [x] Challenges: Model, Repository, Service, Handler
-- [ ] Challenges: Conectar rutas en routes.go
-- [ ] Submissions: Model, Repository, Service, Handler
-- [ ] Submissions: Conectar rutas
+- [x] Challenges: Conectar rutas en routes.go
+- [x] Submissions: Model, Repository, Service, Handler
+- [x] Submissions: Conectar rutas
+- [x] Script para cargar challenges a la DB (cmd/seed)
 
 ### Frontend (Angular)
 - [ ] Setup proyecto Angular
@@ -355,7 +364,10 @@ apschool/
 make docker-run
 
 # Ejecutar migraciones
-source .env && goose -dir internal/migrations postgres "$DATABASE_URL" up
+make migrate-up
+
+# Cargar challenges a la DB
+make seed
 
 # Iniciar servidor con hot reload
 make watch
