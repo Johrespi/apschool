@@ -4,7 +4,7 @@ html {
   color-scheme: light;
 
   /* Primary palette variables */
-  --mat-sys-primary: light-dark(#37656b, #9fcfd5);
+  --mat-sys-primary: light-dark(#8ab3b8, #9fcfd5);
   --mat-sys-on-primary: light-dark(#ffffff, #00363b);
   --mat-sys-primary-container: light-dark(#bbebf1, #1d4d53);
   --mat-sys-on-primary-container: light-dark(#001f23, #bbebf1);
@@ -75,8 +75,8 @@ html {
   /* TYPOGRAPHY SYSTEM VARIABLES */
 
   /* Typography variables. Only used in the different typescale system variables. */
-  --mat-sys-brand-font-family: Roboto; /* The font-family to use for brand text. */
-  --mat-sys-plain-font-family: Roboto; /* The font-family to use for plain text. */
+  --mat-sys-brand-font-family: Inter; /* The font-family to use for brand text. */
+  --mat-sys-plain-font-family: Inter; /* The font-family to use for plain text. */
   --mat-sys-bold-font-weight: 700; /* The font-weight to use for bold text. */
   --mat-sys-medium-font-weight: 500; /* The font-weight to use for medium text. */
   --mat-sys-regular-font-weight: 400; /* The font-weight to use for regular text. */
