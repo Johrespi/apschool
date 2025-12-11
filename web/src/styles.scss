@@ -23,3 +23,60 @@ body {
 html, body {
   height: 100%;
 }
+
+[matIconButton].primary {
+  @include mat.icon-overrides(
+    (
+    color: var(--mat-sys-primary),
+    )
+  )
+}
+
+.accent {
+  @include mat.button-overrides((
+    filled-container-color: var(--mat-sys-tertiary),
+    filled-label-text-color: var(--mat-sys-on-tertiary),
+    outlined-label-text-color: var(--mat-sys-tertiary),
+    protected-label-text-color: var(--mat-sys-tertiary),
+    text-label-text-color: var(--mat-sys-tertiary),
+    text-state-layer-color: var(--mat-sys-tertiary),
+    protected-state-layer-color: var(--mat-sys-tertiary),
+    outlined-state-layer-color: var(--mat-sys-tertiary),
+  ))
+}
+
+.secondary {
+  @include mat.button-overrides((
+    filled-container-color: var(--mat-sys-surface-dim),
+    filled-label-text-color: var(--mat-sys-on-surface),
+    outlined-label-text-color: var(--mat-sys-secondary),
+    protected-label-text-color: var(--mat-sys-secondary),
+    text-label-text-color: var(--mat-sys-secondary),
+    text-state-layer-color: var(--mat-sys-secondary),
+    protected-state-layer-color: var(--mat-sys-secondary),
+    outlined-state-layer-color: var(--mat-sys-secondary),
+  ))
+}
+
+.error {
+  @include mat.button-overrides((
+    filled-container-color: var(--mat-sys-error),
+    filled-label-text-color: var(--mat-sys-on-error),
+    outlined-label-text-color: var(--mat-sys-error),
+    protected-label-text-color: var(--mat-sys-error),
+    text-label-text-color: var(--mat-sys-error),
+    text-state-layer-color: var(--mat-sys-error),
+    protected-state-layer-color: var(--mat-sys-error),
+    outlined-state-layer-color: var(--mat-sys-error),
+  ))
+}
+
+.square {
+  @include mat.button-overrides((
+    filled-container-shape: 8px,
+    outlined-container-shape: 8px,
+    protected-container-shape: 8px,
+    text-container-shape: 8px,
+    tonal-container-shape: 8px,
+  ))
+}
