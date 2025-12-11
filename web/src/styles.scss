@@ -4,8 +4,7 @@
 html {
   @include mat.theme(
     (
-      typography: Roboto,
-      density: 0,
+      typography: Inter,
     )
   );
 }
@@ -16,12 +15,8 @@ body {
   // user's system settings.
   color-scheme: light ;
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  font-family: Inter, "Helvetica Neue", sans-serif;
 
-  // Reset the user agent margin.
   margin: 0;
 }
 
