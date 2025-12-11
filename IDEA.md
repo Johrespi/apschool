@@ -77,6 +77,11 @@ Plataforma web para practicar Python con challenges interactivos. El codigo se e
 
 ---
 
+## Notas Frontend
+- Monaco Editor se cargará via CDN (por ejemplo jsdelivr), coherente con Pyodide por CDN y sin necesidad de configurar workers.
+
+---
+
 ## Por que Pyodide?
 
 Pyodide es el interprete de Python (CPython) compilado a WebAssembly. Ejecuta Python directamente en el navegador.
