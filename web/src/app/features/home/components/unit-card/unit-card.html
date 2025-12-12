@@ -1,1 +1,8 @@
-<p>unit-card works!</p>
+<mat-card class="unit-card" [routerLink]="['/units', unit().slug]">
+  <mat-card-header>
+    <mat-card-title>{{ unit().name }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ unit().description }}</p>
+  </mat-card-content>
+</mat-card>

@@ -1,1 +1,9 @@
-<p>home works!</p>
+<div class ="home-container">
+  <h1>Unidades</h1>
+
+  <div class="units-grid">
+    @for (unit of units; track unit.slug) {
+      <app-unit-card [unit]="unit" />
+    }
+  </div>
+</div>
