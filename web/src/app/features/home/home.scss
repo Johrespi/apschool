@@ -1,0 +1,19 @@
+.home-container {
+  padding: 24px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 24px;
+  color: var(--mat-sys-on-background);
+}
+
+.units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+
+  a {
+    text-decoration: none;
+  }
+}
