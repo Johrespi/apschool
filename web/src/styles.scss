@@ -13,7 +13,7 @@ body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
   // user's system settings.
-  color-scheme: light ;
+  color-scheme: light;
 
   font-family: Inter, "Helvetica Neue", sans-serif;
 
@@ -79,4 +79,12 @@ html, body {
     text-container-shape: 8px,
     tonal-container-shape: 8px,
   ))
+}
+
+.dark {
+  @include mat.button-overrides((
+    filled-container-color: #000000,
+    filled-label-text-color: #ffffff,
+    filled-state-layer-color: #ffffff,
+  ));
 }
