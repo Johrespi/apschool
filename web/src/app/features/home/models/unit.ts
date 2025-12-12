@@ -7,7 +7,7 @@ export interface Unit {
 export const UNITS: Unit[] = [
   {
     slug: 'unit-1-intro',
-    name: 'Unit 1: Introducción a la Programación',
+    name: 'Unidad 1: Introducción a la Programación',
     description: 'Aprende los fundamentos de Python'
   },
 ];

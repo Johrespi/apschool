@@ -1,11 +1,9 @@
 <div class ="home-container">
   <h1>Unidades</h1>
 
-  <div class="ünits-grid">
+  <div class="units-grid">
     @for (unit of units; track unit.slug) {
-      <a [routerLink]="['/units', unit.slug]">
-        <app-unit-card [unit]="unit"></app-unit-card>
-      </a>
+      <app-unit-card [unit]="unit" />
     }
   </div>
 </div>

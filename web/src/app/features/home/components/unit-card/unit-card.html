@@ -1,4 +1,4 @@
-<mat-card class="unit-card">
+<mat-card class="unit-card" [routerLink]="['/units', unit().slug]">
   <mat-card-header>
     <mat-card-title>{{ unit().name }}</mat-card-title>
   </mat-card-header>
