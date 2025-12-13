@@ -4,7 +4,7 @@ html {
   color-scheme: light;
 
   /* Primary palette variables */
-  --mat-sys-primary: light-dark(#002147, #b0e0e6);
+  --mat-sys-primary: light-dark(#171717, #b0e0e6);
   --mat-sys-on-primary: light-dark(#ffffff,#ffffff);
   --mat-sys-primary-container: light-dark(#bbebf1, #1d4d53);
   --mat-sys-on-primary-container: light-dark(#001f23, #bbebf1);

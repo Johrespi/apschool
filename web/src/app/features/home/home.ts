@@ -5,7 +5,7 @@ import { UnitCard } from './components/unit-card/unit-card';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, UnitCard],
+  imports: [UnitCard],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
