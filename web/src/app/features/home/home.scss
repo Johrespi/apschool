@@ -12,6 +12,7 @@ h1 {
 .units-grid {
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: 20px;
 }
 
