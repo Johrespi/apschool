@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use "./app/themes/bluetheme.css";
+@use "./app/themes/shadcn.css";
 
 html {
   @include mat.theme(
