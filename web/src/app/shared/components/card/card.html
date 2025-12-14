@@ -1,0 +1,20 @@
+<a class="card" [routerLink]="link()">
+  <div class="header">
+    <div class="title-row">
+      <div class="title">{{ title() }}</div>
+      @if (subtitle(); as subtitle) {
+        <div class="subtitle">{{ subtitle }}</div>
+      }
+    </div>
+  </div>
+
+  @if (imageSrc(); as imageSrc) {
+    <div class="image-wrapper">
+      <img class="image" [src]="imageSrc" [attr.alt]="imageAlt()" loading="lazy" />
+    </div>
+  }
+
+  <div class="footer">
+    {{ description() }}
+  </div>
+</a>
