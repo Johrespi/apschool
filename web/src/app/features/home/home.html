@@ -1,9 +1,16 @@
-<div class ="home-container">
+<div class="home-container">
   <h1>Unidades</h1>
 
   <div class="units-grid">
     @for (unit of units; track unit.slug) {
-      <app-unit-card [unit]="unit" />
+      <app-card
+        [title]="unit.title"
+        [subtitle]="unit.subtitle"
+        [description]="unit.description"
+        [link]="['/units', unit.slug]"
+        [imageSrc]="unit.imageSrc"
+        [imageAlt]="unit.imageAlt ?? ''"
+      />
     }
   </div>
 </div>
