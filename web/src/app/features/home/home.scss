@@ -1,5 +1,6 @@
 .home-container {
-  padding: 24px;
+  max-width: 1440px;
+  padding: 32px 24px;
   margin: 0 auto;
 }
 
@@ -10,6 +11,19 @@ h1 {
 
 .units-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .units-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .units-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

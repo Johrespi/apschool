@@ -7,7 +7,7 @@
   border-radius: 12px;
   background: #ffffff;
 
-  padding: 16px;
+  padding: 18px;
   text-decoration: none;
   color: inherit;
 
@@ -40,10 +40,16 @@
 }
 
 .title {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: #111827;
-  line-height: 1.25rem;
+  line-height: 1.35rem;
+
+  min-height: calc(1.35rem * 2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .subtitle {
@@ -61,6 +67,12 @@
   background: #f3f4f6;
 }
 
+@media (min-width: 1024px) {
+  .image-wrapper {
+    border-radius: 12px;
+  }
+}
+
 .image {
   display: block;
   width: 100%;
@@ -72,4 +84,10 @@
   font-size: 0.875rem;
   color: #6b7280;
   line-height: 1.25rem;
+
+  min-height: calc(1.25rem * 2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
