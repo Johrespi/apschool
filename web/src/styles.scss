@@ -14,7 +14,8 @@ body {
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
   // user's system settings.
   color-scheme: light;
-  background-color:#E4E4E4;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
 
   font-family: Inter, "Helvetica Neue", sans-serif;
 

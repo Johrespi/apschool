@@ -1,61 +1,61 @@
-/* Note: Color palettes are generated from primary: #B0E0E6 (Powder blue)*/
+/* Note: This theme uses a neutral (shadcn-like) palette. */
 html {
   /* COLOR SYSTEM VARIABLES */
   color-scheme: light;
 
   /* Primary palette variables */
-  --mat-sys-primary: light-dark(#171717, #b0e0e6);
-  --mat-sys-on-primary: light-dark(#ffffff,#ffffff);
-  --mat-sys-primary-container: light-dark(#bbebf1, #1d4d53);
-  --mat-sys-on-primary-container: light-dark(#001f23, #bbebf1);
-  --mat-sys-inverse-primary: light-dark(#9fcfd5, #37656b);
-  --mat-sys-primary-fixed: light-dark(#bbebf1, #bbebf1);
-  --mat-sys-primary-fixed-dim: light-dark(#9fcfd5, #9fcfd5);
-  --mat-sys-on-primary-fixed: light-dark(#001f23, #001f23);
-  --mat-sys-on-primary-fixed-variant: light-dark(#1d4d53, #1d4d53);
+  --mat-sys-primary: light-dark(#18181b, #fafafa);
+  --mat-sys-on-primary: light-dark(#ffffff, #09090b);
+  --mat-sys-primary-container: light-dark(#f4f4f5, #27272a);
+  --mat-sys-on-primary-container: light-dark(#18181b, #fafafa);
+  --mat-sys-inverse-primary: light-dark(#fafafa, #18181b);
+  --mat-sys-primary-fixed: light-dark(#18181b, #fafafa);
+  --mat-sys-primary-fixed-dim: light-dark(#27272a, #e4e4e7);
+  --mat-sys-on-primary-fixed: light-dark(#ffffff, #09090b);
+  --mat-sys-on-primary-fixed-variant: light-dark(#e4e4e7, #27272a);
 
   /* Secondary palette variables */
-  --mat-sys-secondary: light-dark(#506164, #b7cacc);
-  --mat-sys-on-secondary: light-dark(#ffffff, #223335);
-  --mat-sys-secondary-container: light-dark(#d3e6e8, #394a4c);
-  --mat-sys-on-secondary-container: light-dark(#0d1e20, #d3e6e8);
-  --mat-sys-secondary-fixed: light-dark(#d3e6e8, #d3e6e8);
-  --mat-sys-secondary-fixed-dim: light-dark(#b7cacc, #b7cacc);
-  --mat-sys-on-secondary-fixed: light-dark(#0d1e20, #0d1e20);
-  --mat-sys-on-secondary-fixed-variant: light-dark(#394a4c, #394a4c);
+  --mat-sys-secondary: light-dark(#52525b, #a1a1aa);
+  --mat-sys-on-secondary: light-dark(#ffffff, #09090b);
+  --mat-sys-secondary-container: light-dark(#e4e4e7, #27272a);
+  --mat-sys-on-secondary-container: light-dark(#18181b, #fafafa);
+  --mat-sys-secondary-fixed: light-dark(#e4e4e7, #27272a);
+  --mat-sys-secondary-fixed-dim: light-dark(#d4d4d8, #3f3f46);
+  --mat-sys-on-secondary-fixed: light-dark(#18181b, #fafafa);
+  --mat-sys-on-secondary-fixed-variant: light-dark(#52525b, #a1a1aa);
 
-  /* Tertiary palette variables */
-  --mat-sys-tertiary: light-dark(#63597d, #cdc0ea);
-  --mat-sys-on-tertiary: light-dark(#ffffff, #342b4d);
-  --mat-sys-tertiary-container: light-dark(#e8ddff, #4b4164);
-  --mat-sys-on-tertiary-container: light-dark(#1f1636, #e8ddff);
-  --mat-sys-tertiary-fixed: light-dark(#e8ddff, #e8ddff);
-  --mat-sys-tertiary-fixed-dim: light-dark(#cdc0ea, #cdc0ea);
-  --mat-sys-on-tertiary-fixed: light-dark(#1f1636, #1f1636);
-  --mat-sys-on-tertiary-fixed-variant: light-dark(#4b4164, #4b4164);
+  /* Tertiary palette variables (used as "accent" in the app) */
+  --mat-sys-tertiary: light-dark(#18181b, #fafafa);
+  --mat-sys-on-tertiary: light-dark(#ffffff, #09090b);
+  --mat-sys-tertiary-container: light-dark(#f4f4f5, #27272a);
+  --mat-sys-on-tertiary-container: light-dark(#18181b, #fafafa);
+  --mat-sys-tertiary-fixed: light-dark(#18181b, #fafafa);
+  --mat-sys-tertiary-fixed-dim: light-dark(#27272a, #e4e4e7);
+  --mat-sys-on-tertiary-fixed: light-dark(#ffffff, #09090b);
+  --mat-sys-on-tertiary-fixed-variant: light-dark(#e4e4e7, #27272a);
 
   /* Neutral palette variables */
-  --mat-sys-background: light-dark(#f9f9f9, #111414);
-  --mat-sys-on-background: light-dark(#1a1c1c, #e2e2e2);
-  --mat-sys-surface: light-dark(#f9f9f9, #111414);
-  --mat-sys-surface-dim: light-dark(#d9dada, #111414);
-  --mat-sys-surface-bright: light-dark(#f9f9f9, #373a3a);
-  --mat-sys-surface-container-low: light-dark(#f3f4f3, #1a1c1c);
-  --mat-sys-surface-container-lowest: light-dark(#ffffff, #0c0f0f);
-  --mat-sys-surface-container: light-dark(#edeeee, #1e2020);
-  --mat-sys-surface-container-high: light-dark(#e7e8e8, #282a2b);
-  --mat-sys-surface-container-highest: light-dark(#e2e2e2, #333535);
-  --mat-sys-on-surface: light-dark(#1a1c1c, #e2e2e2);
+  --mat-sys-background: light-dark(#fafafa, #09090b);
+  --mat-sys-on-background: light-dark(#09090b, #fafafa);
+  --mat-sys-surface: light-dark(#ffffff, #09090b);
+  --mat-sys-surface-dim: light-dark(#f4f4f5, #18181b);
+  --mat-sys-surface-bright: light-dark(#ffffff, #18181b);
+  --mat-sys-surface-container-low: light-dark(#fafafa, #0f0f12);
+  --mat-sys-surface-container-lowest: light-dark(#ffffff, #09090b);
+  --mat-sys-surface-container: light-dark(#f4f4f5, #18181b);
+  --mat-sys-surface-container-high: light-dark(#ededed, #27272a);
+  --mat-sys-surface-container-highest: light-dark(#e4e4e7, #3f3f46);
+  --mat-sys-on-surface: light-dark(#09090b, #fafafa);
   --mat-sys-shadow: light-dark(#000000, #000000);
   --mat-sys-scrim: light-dark(#000000, #000000);
-  --mat-sys-surface-tint: light-dark(#37656b, #9fcfd5);
-  --mat-sys-inverse-surface: light-dark(#2e3131, #e2e2e2);
-  --mat-sys-inverse-on-surface: light-dark(#f0f1f1, #2e3131);
-  --mat-sys-outline: light-dark(#707979, #8a9293);
-  --mat-sys-outline-variant: light-dark(#c0c8c9, #404849);
+  --mat-sys-surface-tint: light-dark(#18181b, #fafafa);
+  --mat-sys-inverse-surface: light-dark(#18181b, #fafafa);
+  --mat-sys-inverse-on-surface: light-dark(#fafafa, #18181b);
+  --mat-sys-outline: light-dark(#e4e4e7, #3f3f46);
+  --mat-sys-outline-variant: light-dark(#d4d4d8, #27272a);
   --mat-sys-neutral10: light-dark(
-    #1a1c1c,
-    #1a1c1c
+    #09090b,
+    #fafafa
   ); /* Variable used for the form field native select option text color */
 
   /* Error palette variables */
@@ -65,12 +65,9 @@ html {
   --mat-sys-on-error-container: light-dark(#410002, #ffdad6);
 
   /* Neutral variant palette variables */
-  --mat-sys-surface-variant: light-dark(#dce4e5, #404849);
-  --mat-sys-on-surface-variant: light-dark(#404849, #c0c8c9);
-  --mat-sys-neutral-variant20: light-dark(
-    #2a3233,
-    #2a3233
-  ); /* Variable used for the sidenav scrim (container background shadow when opened) */
+  --mat-sys-surface-variant: light-dark(#f4f4f5, #27272a);
+  --mat-sys-on-surface-variant: light-dark(#52525b, #a1a1aa);
+  --mat-sys-neutral-variant20: light-dark( #18181b, #18181b); /* Variable used for the sidenav scrim (container background shadow when opened) */
 
   /* TYPOGRAPHY SYSTEM VARIABLES */
 
