@@ -13,7 +13,7 @@ export const UNITS: Unit[] = [
     title: 'Introducción a la Programación',
     subtitle: 'Unidad 1',
     description: 'Aprende los fundamentos de Python',
-    imageSrc: '/assets/units/unit-1.png',
+    imageSrc: '/assets/units/unit-1.webp',
     imageAlt: 'Unidad 1',
   },
 ];
