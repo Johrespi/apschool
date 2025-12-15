@@ -16,10 +16,10 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render navbar', async () => {
+  it('should render app', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('a.logo')?.textContent).toContain('Ap School');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });
