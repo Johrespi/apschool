@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"apschool/internal/ctxkeys"
 	"apschool/internal/response"
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -173,4 +175,24 @@ func getGithubEmail(ctx context.Context, accessToken string) (string, error) {
 
 	return "", fmt.Errorf("no primary verified email found")
 
+}
+
+func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
+	userID, ok := ctxkeys.GetUserID(r.Context())
+	if !ok {
+		response.Unauthorized(w)
+		return
+	}
+
+	user, err := h.service.GetUserByID(r.Context(), userID)
+	if err != nil {
+		if errors.Is(err, ErrUserNotFound) {
+			response.NotFound(w)
+			return
+		}
+		response.ServerError(w, r, h.logger, err)
+		return
+	}
+
+	response.WriteJSON(w, http.StatusOK, response.Envelope{"user": user}, nil)
 }

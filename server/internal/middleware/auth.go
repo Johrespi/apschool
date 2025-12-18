@@ -2,15 +2,12 @@ package middleware
 
 import (
 	"apschool/internal/auth"
+	"apschool/internal/ctxkeys"
 	"apschool/internal/response"
 	"context"
 	"net/http"
 	"strings"
 )
-
-type contextKey string
-
-const UserIDKey contextKey = "userID"
 
 func RequireAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +36,7 @@ func RequireAuth(next http.Handler) http.Handler {
 		}
 
 		// Save to context
-		ctx := context.WithValue(r.Context(), UserIDKey, userID)
+		ctx := context.WithValue(r.Context(), ctxkeys.UserIDKey, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

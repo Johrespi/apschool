@@ -29,8 +29,16 @@ func (app *application) routes() http.Handler {
 	r.Get("/health", app.health)
 
 	//Auth routes
-	r.Get("/api/auth/github/login", app.auth.GithubLogin)
-	r.Get("/api/auth/github/callback", app.auth.GithubCallback)
+	r.Route("/api/auth", func(r chi.Router) {
+		r.Get("/github/login", app.auth.GithubLogin)
+		r.Get("/github/callback", app.auth.GithubCallback)
+
+		r.Group(func(r chi.Router) {
+			r.Use(mw.RequireAuth)
+			r.Get("/me", app.auth.GetMe)
+		})
+	})
+
 
 	// Challenges routes
 	r.Get("/api/challenges", app.challenges.ListChallengesHandler)
