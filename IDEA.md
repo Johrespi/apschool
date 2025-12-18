@@ -63,10 +63,12 @@ Plataforma web para practicar Python con challenges interactivos. El codigo se e
 ## Stack Tecnologico
 
 ### Frontend
-- **Framework**: Angular 17+ (Standalone Components)
-- **Editor**: Monaco Editor
-- **Ejecucion Python**: Pyodide
-- **UI**: Angular Material o Tailwind
+- **Framework**: Angular 21 (Standalone Components)
+- **Runtime/Package manager**: Bun
+- **Testing**: Vitest (via Angular test builder)
+- **Editor**: Monaco Editor (pendiente)
+- **Ejecucion Python**: Pyodide (pendiente)
+- **UI**: Angular Material (base) + estilos shadcn-like (tokens CSS)
 
 ### Backend
 - **Lenguaje**: Go
@@ -78,6 +80,8 @@ Plataforma web para practicar Python con challenges interactivos. El codigo se e
 ---
 
 ## Notas Frontend
+- Layout principal por rutas: `MainLayout` (header + `<main>` + `router-outlet`). `AppComponent` queda minimal (solo `router-outlet`).
+- Estilos: tema neutro tipo shadcn implementado con tokens `--mat-sys-*` (Angular Material v3).
 - Monaco Editor se cargará via CDN (por ejemplo jsdelivr), coherente con Pyodide por CDN y sin necesidad de configurar workers.
 
 ---
@@ -319,7 +323,7 @@ apschool/
 ```
 1. Usuario visita la app
 2. Login con GitHub OAuth
-3. Ve lista de challenges por categoria
+3. Ve lista de challenges por categoria (frontend: `Unit.slug` === backend: `challenges.category`)
 4. Selecciona un challenge
 5. Escribe codigo en Monaco Editor
 6. Click "Ejecutar"
@@ -367,6 +371,7 @@ apschool/
 ### Requisitos
 - Go 1.21+
 - Docker (para PostgreSQL)
+- Bun (para el frontend)
 
 ### Backend
 ```bash
