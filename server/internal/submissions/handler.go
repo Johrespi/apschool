@@ -1,7 +1,7 @@
 package submissions
 
 import (
-	"apschool/internal/middleware"
+	"apschool/internal/ctxkeys"
 	"apschool/internal/response"
 	"apschool/internal/validator"
 	"errors"
@@ -22,7 +22,11 @@ func NewHandler(service *Service, logger *slog.Logger) *Handler {
 }
 
 func (h *Handler) CreateSubmissionsHandler(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value(middleware.UserIDKey).(int)
+	userID, ok := ctxkeys.GetUserID(r.Context())
+	if !ok {
+		response.Unauthorized(w)
+		return
+	}
 
 	var submission Submission
 
@@ -54,7 +58,11 @@ func (h *Handler) CreateSubmissionsHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *Handler) GetSubmissionsHandler(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value(middleware.UserIDKey).(int)
+	userID, ok := ctxkeys.GetUserID(r.Context())
+	if !ok {
+		response.Unauthorized(w)
+		return
+	}
 
 	submissions, err := h.service.GetUserSubmissions(r.Context(), userID)
 	if err != nil {
@@ -66,8 +74,11 @@ func (h *Handler) GetSubmissionsHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *Handler) GetSubmissionHandler(w http.ResponseWriter, r *http.Request) {
-
-	userID := r.Context().Value(middleware.UserIDKey).(int)
+	userID, ok := ctxkeys.GetUserID(r.Context())
+	if !ok {
+		response.Unauthorized(w)
+		return
+	}
 	challengeIDStr := chi.URLParam(r, "challenge_id")
 	challengeID, err := strconv.Atoi(challengeIDStr)
 	if err != nil {

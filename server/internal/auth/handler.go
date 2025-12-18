@@ -1,7 +1,7 @@
 package auth
 
 import (
-	mw "apschool/internal/middleware"
+	"apschool/internal/ctxkeys"
 	"apschool/internal/response"
 	"bytes"
 	"context"
@@ -178,7 +178,11 @@ func getGithubEmail(ctx context.Context, accessToken string) (string, error) {
 }
 
 func (h *Handler) GetMe(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value(mw.UserIDKey).(int)
+	userID, ok := ctxkeys.GetUserID(r.Context())
+	if !ok {
+		response.Unauthorized(w)
+		return
+	}
 
 	user, err := h.service.GetUserByID(r.Context(), userID)
 	if err != nil {
