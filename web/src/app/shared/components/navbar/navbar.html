@@ -1,5 +1,8 @@
 <mat-toolbar class="navbar">
-  <a routerLink="/" class="logo">Ap School</a>
+  <a routerLink="/" class="logo">
+    <img src="assets/logo/logo.webp" alt="AP School Logo" class="logo-img" />
+    Ap School
+  </a>
   <span class="spacer"></span>
 
   @if (authService.isAuthenticated()) {

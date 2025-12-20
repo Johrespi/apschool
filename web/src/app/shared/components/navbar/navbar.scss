@@ -1,6 +1,14 @@
 .logo {
+  display: flex;
+  align-items: center;
   text-decoration: none;
   color: inherit;
+}
+
+.logo-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
 }
 
 .spacer {
