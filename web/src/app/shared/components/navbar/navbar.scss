@@ -15,24 +15,10 @@
   flex: 1;
 }
 
-.user-menu-trigger {
+.user-menu-content {
   display: flex;
   align-items: center;
-
-  .user-avatar {
-    order: 1;
-  }
-
-  .username {
-    order: 2;
-    margin-left: 8px;
-    font-weight: 500;
-  }
-
-  mat-icon {
-    order: 3;
-    margin-left: 4px;
-  }
+  gap: 8px;
 }
 
 .user-avatar {
@@ -40,7 +26,10 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  vertical-align: middle;
+}
+
+.username {
+  font-weight: 500;
 }
 
 .github-icon {
