@@ -7,13 +7,15 @@
 
   @if (authService.isAuthenticated()) {
     <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
-      <img
-        [src]="authService.user()?.avatar_url"
-        [alt]="authService.user()?.username"
-        class="user-avatar"
-      />
-      <span class="username">{{ authService.user()?.username }}</span>
-      <mat-icon>arrow_drop_down</mat-icon>
+      <span class="user-menu-content">
+        <img
+          [src]="authService.user()?.avatar_url"
+          [alt]="authService.user()?.username"
+          class="user-avatar"
+        />
+        <span class="username">{{ authService.user()?.username }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </span>
     </button>
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="authService.logout()">
