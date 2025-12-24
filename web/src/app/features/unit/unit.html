@@ -1,0 +1,15 @@
+<div class="unit-container">
+  <h1>Challenges</h1>
+  <div class="challenges-grid">
+    @for (challenge of challenges(); track challenge.id) {
+      <app-card
+        [title]="challenge.title"
+        [subtitle]="'Challenge ' + challenge.id"
+        [description]="(challenge.description | slice:0:100) + '...'"
+        [link]="['challenges', challenge.id]"
+      />
+    } @empty {
+      <p>Cargando challenges...</p>
+    }
+  </div>
+</div>
