@@ -41,8 +41,8 @@ export class AuthService {
   }
 
   private fetchCurrentUser(): void {
-    this.api.get<User>('/auth/me').subscribe({
-      next: (user) => this.userSignal.set(user),
+    this.api.get<{user: User}>('/auth/me').subscribe({
+      next: (response) => this.userSignal.set(response.user),
       error: () => {
         localStorage.removeItem(TOKEN_KEY);
         this.userSignal.set(null);
