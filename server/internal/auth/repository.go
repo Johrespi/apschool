@@ -5,6 +5,13 @@ import (
 	"database/sql"
 )
 
+type RepositoryInterface interface {
+	GetUserByGithubID(ctx context.Context, githubID int) (*User, error)
+	GetUserByID(ctx context.Context, id int) (*User, error)
+	CreateUser(ctx context.Context, username, email, avatarURL string) (*User, error)
+	CreateGithubAuth(ctx context.Context, userID, githubID int) error
+}
+
 type Repository struct {
 	db *sql.DB
 }
