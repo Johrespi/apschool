@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"flag"
 	"os"
 	"testing"
 
@@ -11,6 +12,14 @@ import (
 var testDB *testutil.TestDB
 
 func TestMain(m *testing.M) {
+	// Parse flags first so we can check -short
+	flag.Parse()
+
+	// Skip container setup entirely in short mode (for CI without Docker)
+	if testing.Short() {
+		os.Exit(m.Run())
+	}
+
 	ctx := context.Background()
 
 	var err error
