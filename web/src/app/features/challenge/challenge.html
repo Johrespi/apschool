@@ -5,13 +5,13 @@
       <div class="description-panel">
         <h1>{{ challenge.title }}</h1>
         <div class="description">
-          {{ challenge.description }}
+          <markdown [data]="challenge.description" />
         </div>
         @if (challenge.hints) {
           <details class="hints">
             <summary>Mostrar pistas</summary>
             <div class="hints-content">
-              {{ challenge.hints }}
+              <markdown [data]="challenge.hints" />
             </div>
           </details>
         }
@@ -22,7 +22,7 @@
           <app-monaco-editor
             [value]="initialCode()"
             language="python"
-            theme="vs-dark"
+            theme="vs"
             (valueChange)="onCodeChange($event)"
           />
         </div>

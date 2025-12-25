@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
+import { MarkdownComponent } from 'ngx-markdown';
 import { ChallengesService } from '../../core/services/challenge';
 import { PyodideService, PythonResult } from '../../core/services/pyodide';
 import { MonacoEditorComponent } from '../../shared/components/monaco-editor/monaco-editor';
 @Component({
   selector: 'app-challenge',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MonacoEditorComponent],
+  imports: [MonacoEditorComponent, MarkdownComponent],
   templateUrl: './challenge.html',
   styleUrl: './challenge.scss',
 })
