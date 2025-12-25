@@ -1,0 +1,56 @@
+<div class="challenge-container">
+  @if (challenge(); as challenge) {
+    <div class="challenge-layout">
+      <!-- Panel izquierdo: descripción -->
+      <div class="description-panel">
+        <h1>{{ challenge.title }}</h1>
+        <div class="description">
+          {{ challenge.description }}
+        </div>
+        @if (challenge.hints) {
+          <details class="hints">
+            <summary>Mostrar pistas</summary>
+            <div class="hints-content">
+              {{ challenge.hints }}
+            </div>
+          </details>
+        }
+      </div>
+      <!-- Panel derecho: editor y output -->
+      <div class="editor-panel">
+        <div class="editor-wrapper">
+          <app-monaco-editor
+            [value]="initialCode()"
+            language="python"
+            theme="vs-dark"
+            (valueChange)="onCodeChange($event)"
+          />
+        </div>
+        <div class="output-wrapper">
+          <pre class="output" [class.success]="lastResult()?.success" [class.error]="lastResult()?.error">{{ output() || 'La salida aparecerá aquí...' }}</pre>
+        </div>
+        <div class="actions">
+          @if (pyodideLoading()) {
+            <span class="loading-text">Cargando Python...</span>
+          }
+          <button
+            class="btn-run"
+            (click)="onRun()"
+            [disabled]="isRunning() || pyodideLoading()"
+          >
+            {{ isRunning() ? 'Ejecutando...' : 'Ejecutar' }}
+          </button>
+          <button
+            class="btn-submit"
+            (click)="onSubmit()"
+            [disabled]="!canSubmit()"
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="loading">Cargando challenge...</div>
+  }
+</div>
