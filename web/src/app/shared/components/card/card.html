@@ -14,7 +14,9 @@
     </div>
   }
 
-  <div class="footer">
-    {{ description() }}
-  </div>
+  @if (description(); as description) {
+    <div class="footer">
+      {{ description }}
+    </div>
+  }
 </a>

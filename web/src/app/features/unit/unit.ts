@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
-import { SlicePipe } from '@angular/common';
 import { Card } from '../../shared/components/card/card';
 import { ChallengesService } from '../../core/services/challenge';
 
 @Component({
   selector: 'app-unit',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Card, SlicePipe],
+  imports: [Card],
   templateUrl: './unit.html',
   styleUrl: './unit.scss',
 })

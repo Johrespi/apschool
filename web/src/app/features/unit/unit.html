@@ -5,7 +5,6 @@
       <app-card
         [title]="challenge.title"
         [subtitle]="'Challenge ' + challenge.id"
-        [description]="(challenge.description | slice:0:100) + '...'"
         [link]="['challenges', challenge.id]"
       />
     } @empty {

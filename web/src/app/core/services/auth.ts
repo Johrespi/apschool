@@ -14,13 +14,16 @@ export class AuthService {
   private readonly router = inject(Router);
 
   private readonly userSignal = signal<User | null>(null);
+  private readonly isLoadingSignal = signal(false);
 
   readonly user = this.userSignal.asReadonly();
-  readonly isAuthenticated = computed(() => this.userSignal() !== null)
+  readonly isLoading = this.isLoadingSignal.asReadonly();
+  readonly isAuthenticated = computed(() => this.userSignal() !== null);
 
   constructor() {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
+      this.isLoadingSignal.set(true);
       this.fetchCurrentUser();
     }
   }
@@ -42,10 +45,14 @@ export class AuthService {
 
   private fetchCurrentUser(): void {
     this.api.get<{user: User}>('/auth/me').subscribe({
-      next: (response) => this.userSignal.set(response.user),
+      next: (response) => {
+        this.userSignal.set(response.user);
+        this.isLoadingSignal.set(false);
+      },
       error: () => {
         localStorage.removeItem(TOKEN_KEY);
         this.userSignal.set(null);
+        this.isLoadingSignal.set(false);
       },
     });
   }
