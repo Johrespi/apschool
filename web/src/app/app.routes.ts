@@ -18,7 +18,11 @@ export const routes: Routes = [
       {
         path: 'units/:slug',
         loadComponent: () => import ('./features/unit/unit').then(m => m.Unit)
-      }
+      },
+      {
+        path: 'units/:slug/challenges/:id',
+        loadComponent: () => import('./features/challenge/challenge').then(m => m.Challenge),
+      },
     ],
   },
 ];
