@@ -1,6 +1,6 @@
 # Hello World
 
-## Descripcion
+## Descripción
 
 Escribe un programa que imprima "Hello, World!" en la consola.
 
