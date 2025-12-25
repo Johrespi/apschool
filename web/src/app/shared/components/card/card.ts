@@ -13,7 +13,7 @@ type RouterLinkTarget = string | any[];
 export class Card {
   title = input.required<string>();
   subtitle = input<string>();
-  description = input.required<string>();
+  description = input<string>();
   link = input.required<RouterLinkTarget>();
   imageSrc = input<string>();
   imageAlt = input<string>('');
