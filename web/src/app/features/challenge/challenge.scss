@@ -158,29 +158,6 @@
     color: var(--mat-sys-on-surface-variant);
     font-size: 0.875rem;
   }
-  button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: opacity 0.2s;
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    &:not(:disabled):hover {
-      opacity: 0.9;
-    }
-  }
-  .btn-run {
-    background: var(--mat-sys-secondary-container);
-    color: var(--mat-sys-on-secondary-container);
-  }
-  .btn-submit {
-    background: var(--mat-sys-primary);
-    color: var(--mat-sys-on-primary);
-  }
 }
 .loading {
   display: flex;
