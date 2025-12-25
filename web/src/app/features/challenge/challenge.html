@@ -34,14 +34,14 @@
             <span class="loading-text">Cargando Python...</span>
           }
           <button
-            mat-flat-button
+            matButton="filled"
             (click)="onRun()"
             [disabled]="isRunning() || pyodideLoading()"
           >
             {{ isRunning() ? 'Ejecutando...' : 'Ejecutar' }}
           </button>
           <button
-            mat-flat-button
+            matButton="filled"
             color="primary"
             (click)="onSubmit()"
             [disabled]="!canSubmit() || isSubmitting() || isSubmitted()"
