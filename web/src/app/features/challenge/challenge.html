@@ -34,18 +34,19 @@
             <span class="loading-text">Cargando Python...</span>
           }
           <button
-            class="btn-run"
+            mat-flat-button
             (click)="onRun()"
             [disabled]="isRunning() || pyodideLoading()"
           >
             {{ isRunning() ? 'Ejecutando...' : 'Ejecutar' }}
           </button>
           <button
-            class="btn-submit"
+            mat-flat-button
+            color="primary"
             (click)="onSubmit()"
-            [disabled]="!canSubmit()"
+            [disabled]="!canSubmit() || isSubmitting() || isSubmitted()"
           >
-            Enviar
+            {{ submitButtonText() }}
           </button>
         </div>
       </div>
