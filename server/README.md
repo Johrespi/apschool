@@ -4,7 +4,7 @@ Go REST API for the AP School platform.
 
 ## Requirements
 
-- Go 1.23+
+- Go 1.25.5+
 - Docker
 - [Goose](https://github.com/pressly/goose) (for migrations)
 
