@@ -1,61 +1,34 @@
 # AP School
 
-AP School is a web application made for students of Programming Foundations course at ESPOL. It helps students to practice their python abilities through coding. AP School contains content similar to the course syllabus.
+![Angular](https://img.shields.io/badge/Angular-21-dd0031)
+![Go](https://img.shields.io/badge/Go-1.23-00add8)
+
+A web platform for students of the Programming Foundations course at ESPOL to practice Python through interactive coding challenges.
+
+Code runs directly in the browser using Pyodide (Python compiled to WebAssembly) — no server-side execution required.
+
+## Features
+
+- Python execution in the browser (Pyodide + WebAssembly)
+- Code editor powered by Monaco Editor
+- GitHub authentication
+- Challenges organized by thematic units
+- Submission history tracking
+
+## Tech Stack
+
+| Frontend | Backend |
+|----------|---------|
+| Angular 21 | Go |
+| Monaco Editor | Chi Router |
+| Pyodide | PostgreSQL |
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-## MakeFile
-
-Run build make command with tests
-```bash
-make all
-```
-
-Build the application
-```bash
-make build
-```
-
-Run the application
-```bash
-make run
-```
-Create DB container
-```bash
-make docker-run
-```
-
-Shutdown DB Container
-```bash
-make docker-down
-```
-
-DB Integrations Test:
-```bash
-make itest
-```
-
-Live reload the application:
-```bash
-make watch
-```
-
-Run the test suite:
-```bash
-make test
-```
-
-Clean up binary from the last build:
-```bash
-make clean
-```
-
-Execute migrations
-```bash
-source .env && goose -dir internal/migrations postgres "$DATABASE_URL" up
-```
+See detailed setup instructions:
+- [Backend](./server/README.md)
+- [Frontend](./web/README.md)
 
 ## Author
-Johann Ramírez - johrespi@espol.edu.ec
+
+Johann Ramirez - johrespi@espol.edu.ec
