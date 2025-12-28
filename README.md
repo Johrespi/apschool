@@ -1,7 +1,7 @@
 # AP School
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Angular-21.0.0-dd0031" alt="Angular">
+  <img src="https://img.shields.io/badge/Angular-21.0.6-dd0031" alt="Angular">
   <img src="https://img.shields.io/badge/Go-1.25.5-00add8" alt="Go">
 </p>
 
