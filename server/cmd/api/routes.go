@@ -25,11 +25,13 @@ func (app *application) routes() http.Handler {
 		MaxAge:           300,
 	}))
 
+	r.Use(mw.RateLimitByIP(100, time.Minute))
 	r.Get("/", app.ping)
 	r.Get("/health", app.health)
 
 	//Auth routes
 	r.Route("/api/auth", func(r chi.Router) {
+		r.Use(mw.RateLimitByIP(10, time.Minute))
 		r.Get("/github/login", app.auth.GithubLogin)
 		r.Get("/github/callback", app.auth.GithubCallback)
 
@@ -39,13 +41,16 @@ func (app *application) routes() http.Handler {
 		})
 	})
 
-
 	// Challenges routes
-	r.Get("/api/challenges", app.challenges.ListChallengesHandler)
-	r.Get("/api/challenges/{id}", app.challenges.GetChallengeHandler)
+	r.Group(func(r chi.Router) {
+		r.Use(mw.RateLimitByIP(60, time.Minute))
+		r.Get("/api/challenges", app.challenges.ListChallengesHandler)
+		r.Get("/api/challenges/{id}", app.challenges.GetChallengeHandler)
+	})
 
 	r.Route("/api/submissions", func(r chi.Router) {
 		r.Use(mw.RequireAuth)
+		r.Use(mw.RateLimitByUserID(10, time.Minute))
 		r.Post("/", app.submissions.CreateSubmissionsHandler)
 		r.Get("/", app.submissions.GetSubmissionsHandler)
 		r.Get("/{challenge_id}", app.submissions.GetSubmissionHandler)

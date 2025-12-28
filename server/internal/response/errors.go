@@ -36,3 +36,7 @@ func Unauthorized(w http.ResponseWriter) {
 func Forbidden(w http.ResponseWriter) {
 	ErrorResponse(w, http.StatusForbidden, "forbidden")
 }
+
+func TooManyRequests(w http.ResponseWriter) {
+	ErrorResponse(w, http.StatusTooManyRequests, "too many requests")
+}
