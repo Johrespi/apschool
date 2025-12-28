@@ -1,7 +1,9 @@
 # AP School
 
-![Angular](https://img.shields.io/badge/Angular-21-dd0031)
-![Go](https://img.shields.io/badge/Go-1.23-00add8)
+<p align="center">
+  <img src="https://img.shields.io/badge/Angular-21.0.0-dd0031" alt="Angular">
+  <img src="https://img.shields.io/badge/Go-1.25.5-00add8" alt="Go">
+</p>
 
 A web platform for students of the Programming Foundations course at ESPOL to practice Python through interactive coding challenges.
 
