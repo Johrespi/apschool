@@ -19,6 +19,7 @@ var (
 	host     = os.Getenv("APSCHOOL_DB_HOST")
 	port     = os.Getenv("APSCHOOL_DB_PORT")
 	schema   = os.Getenv("APSCHOOL_DB_SCHEMA")
+	sslmode  = os.Getenv("APSCHOOL_DB_SSLMODE")
 )
 
 type Challenge struct {
@@ -56,7 +57,12 @@ func main() {
 }
 
 func openDB() (*sql.DB, error) {
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
+	if sslmode == "" {
+		sslmode = "disable"
+	}
+
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s&search_path=%s",
+		username, password, host, port, database, sslmode, schema)
 
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
