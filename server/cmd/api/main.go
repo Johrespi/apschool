@@ -28,6 +28,7 @@ var (
 	host       = os.Getenv("APSCHOOL_DB_HOST")
 	schema     = os.Getenv("APSCHOOL_DB_SCHEMA")
 	serverPort = os.Getenv("PORT")
+	sslmode    = os.Getenv("APSCHOOL_DB_SSLMODE")
 )
 
 type application struct {
@@ -103,7 +104,11 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 
 func openDB() (*sql.DB, error) {
 
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
+	if sslmode == "" {
+		sslmode = "disable"
+	}
+
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s&search_path=%s", username, password, host, port, database, sslmode, schema)
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
 		return nil, err
