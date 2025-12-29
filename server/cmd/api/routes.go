@@ -4,6 +4,7 @@ import (
 	"apschool/internal/response"
 	"context"
 	"net/http"
+	"os"
 	"time"
 
 	mw "apschool/internal/middleware"
@@ -13,12 +14,20 @@ import (
 	"github.com/go-chi/cors"
 )
 
+var (
+	frontendURL = os.Getenv("FRONTEND_URL")
+)
+
 func (app *application) routes() http.Handler {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
+	if frontendURL == "" {
+		frontendURL = "http://localhost:4200"
+	}
+
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedOrigins:   []string{frontendURL},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true,
