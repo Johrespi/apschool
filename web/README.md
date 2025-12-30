@@ -31,6 +31,17 @@ The app will be available at `http://localhost:4200`.
 | `bun run test` | Run tests |
 | `bun run watch` | Build and watch for changes |
 
+## Pyodide - Python in the Browser
+
+This app uses [Pyodide](https://pyodide.org/) to execute Python code directly in the browser via WebAssembly. This means:
+
+- **Zero server cost** for code execution - runs on user's CPU
+- **Instant feedback** - no round-trip to a server
+- **Secure** - malicious code only affects the user who wrote it
+- **Scalable** - 1 or 100,000 users = same infrastructure cost
+
+The `PyodideService` handles loading Pyodide from CDN and executing user code against challenge tests.
+
 ## Project Structure
 
 ```
@@ -63,6 +74,6 @@ web/
 |---------|-------------|
 | `ApiService` | HTTP client for backend API |
 | `AuthService` | Authentication state management |
-| `PyodideService` | Python execution in browser |
+| `PyodideService` | Python execution in browser via WebAssembly |
 | `ChallengeService` | Challenge data fetching |
 | `SubmissionService` | Submission management |
