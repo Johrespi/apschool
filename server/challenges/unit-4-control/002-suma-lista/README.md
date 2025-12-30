@@ -1,8 +1,8 @@
 # Suma con For
 
-## Descripcion
+## Descripción
 
-Tienes una lista de numeros `[1, 2, 3, 4, 5]`. Usa un ciclo `for` para sumar todos los elementos e imprime el resultado.
+Tienes una lista de números `[1, 2, 3, 4, 5]`. Usa un ciclo `for` para sumar todos los elementos e imprime el resultado.
 
 ## Ejemplo
 
