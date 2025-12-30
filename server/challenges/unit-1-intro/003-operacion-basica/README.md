@@ -1,6 +1,6 @@
-# Operacion Basica
+# Operación Básica
 
-## Descripcion
+## Descripción
 
 Escribe un programa que imprima el resultado de sumar 10 + 5.
 
@@ -14,5 +14,5 @@ Escribe un programa que imprima el resultado de sumar 10 + 5.
 
 ## Instrucciones
 
-1. Usa la funcion `print()` para mostrar el resultado.
-2. Puedes escribir la operacion directamente dentro de `print()`.
+1. Usa la función `print()` para mostrar el resultado.
+2. Puedes escribir la operación directamente dentro de `print()`.

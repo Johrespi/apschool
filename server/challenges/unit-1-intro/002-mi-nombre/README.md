@@ -1,6 +1,6 @@
 # Mi Nombre
 
-## Descripcion
+## Descripción
 
 Escribe un programa que imprima "ESPOL" en la consola.
 
@@ -14,5 +14,5 @@ ESPOL
 
 ## Instrucciones
 
-1. Usa la funcion `print()` para mostrar el mensaje.
-2. Asegurate de que el texto sea exactamente "ESPOL".
+1. Usa la función `print()` para mostrar el mensaje.
+2. Asegúrate de que el texto sea exactamente "ESPOL".
