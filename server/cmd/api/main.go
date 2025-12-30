@@ -9,9 +9,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
-	"sort"
-	"strings"
 	"syscall"
 	"time"
 
@@ -21,6 +18,7 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/pressly/goose/v3"
 )
 
 var (
@@ -134,107 +132,15 @@ func openDB() (*sql.DB, error) {
 
 }
 
-// runMigrations executes all SQL migration files in order.
-// It reads files from the migrations directory and executes only the "Up" portion.
+// runMigrations executes all pending database migrations using goose.
 func runMigrations(db *sql.DB, migrationsPath string) error {
-	// Create migrations tracking table if not exists
-	_, err := db.Exec(`
-		CREATE TABLE IF NOT EXISTS schema_migrations (
-			version TEXT PRIMARY KEY,
-			applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("failed to create schema_migrations table: %w", err)
+	if err := goose.SetDialect("postgres"); err != nil {
+		return fmt.Errorf("failed to set dialect: %w", err)
 	}
 
-	// Read migration files
-	files, err := os.ReadDir(migrationsPath)
-	if err != nil {
-		return fmt.Errorf("failed to read migrations directory: %w", err)
-	}
-
-	// Filter and sort SQL files
-	var sqlFiles []string
-	for _, file := range files {
-		if !file.IsDir() && strings.HasSuffix(file.Name(), ".sql") {
-			sqlFiles = append(sqlFiles, file.Name())
-		}
-	}
-	sort.Strings(sqlFiles)
-
-	// Execute each migration
-	for _, fileName := range sqlFiles {
-		// Check if migration was already applied
-		var exists bool
-		err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE version = $1)", fileName).Scan(&exists)
-		if err != nil {
-			return fmt.Errorf("failed to check migration status for %s: %w", fileName, err)
-		}
-		if exists {
-			log.Printf("Migration %s already applied, skipping", fileName)
-			continue
-		}
-
-		// Read migration file
-		content, err := os.ReadFile(filepath.Join(migrationsPath, fileName))
-		if err != nil {
-			return fmt.Errorf("failed to read migration file %s: %w", fileName, err)
-		}
-
-		// Extract only the "Up" portion (before -- +goose Down)
-		upSQL := extractUpMigration(string(content))
-		if upSQL == "" {
-			log.Printf("Warning: no Up migration found in %s, skipping", fileName)
-			continue
-		}
-
-		// Execute migration in a transaction
-		tx, err := db.Begin()
-		if err != nil {
-			return fmt.Errorf("failed to begin transaction for %s: %w", fileName, err)
-		}
-
-		if _, err := tx.Exec(upSQL); err != nil {
-			tx.Rollback()
-			return fmt.Errorf("failed to execute migration %s: %w", fileName, err)
-		}
-
-		// Record migration as applied
-		if _, err := tx.Exec("INSERT INTO schema_migrations (version) VALUES ($1)", fileName); err != nil {
-			tx.Rollback()
-			return fmt.Errorf("failed to record migration %s: %w", fileName, err)
-		}
-
-		if err := tx.Commit(); err != nil {
-			return fmt.Errorf("failed to commit migration %s: %w", fileName, err)
-		}
-
-		log.Printf("Applied migration: %s", fileName)
+	if err := goose.Up(db, migrationsPath); err != nil {
+		return fmt.Errorf("failed to run migrations: %w", err)
 	}
 
 	return nil
-}
-
-// extractUpMigration extracts the SQL between "-- +goose Up" and "-- +goose Down"
-func extractUpMigration(content string) string {
-	lines := strings.Split(content, "\n")
-	var upLines []string
-	inUp := false
-
-	for _, line := range lines {
-		trimmed := strings.TrimSpace(line)
-		if strings.Contains(trimmed, "-- +goose Up") {
-			inUp = true
-			continue
-		}
-		if strings.Contains(trimmed, "-- +goose Down") {
-			break
-		}
-		if inUp {
-			upLines = append(upLines, line)
-		}
-	}
-
-	return strings.TrimSpace(strings.Join(upLines, "\n"))
 }
