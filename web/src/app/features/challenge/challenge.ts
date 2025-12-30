@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChallengesService } from '../../core/services/challenge';
 import { PyodideService, PythonResult } from '../../core/services/pyodide';
 import { SubmissionService } from '../../core/services/submission';
+import { AuthService } from '../../core/services/auth';
 import { MonacoEditorComponent } from '../../shared/components/monaco-editor/monaco-editor';
 
 @Component({
@@ -20,6 +21,7 @@ export class Challenge {
   private readonly challengesService = inject(ChallengesService);
   private readonly pyodideService = inject(PyodideService);
   private readonly submissionService = inject(SubmissionService);
+  private readonly authService = inject(AuthService);
   private readonly snackBar = inject(MatSnackBar);
 
   // Route params
@@ -60,7 +62,8 @@ export class Challenge {
   // Computed
   pyodideLoading = this.pyodideService.isLoading;
   pyodideReady = this.pyodideService.isReady;
-  canSubmit = computed(() => this.lastResult()?.success === true);
+  isAuthenticated = this.authService.isAuthenticated;
+  canSubmit = computed(() => this.lastResult()?.success === true && this.isAuthenticated());
 
   // Initialize code with existing submission or template
   initialCode = computed(() => {
@@ -101,6 +104,16 @@ export class Challenge {
   onSubmit(): void {
     const challenge = this.challenge();
     if (!challenge) return;
+
+    if (!this.authService.isAuthenticated()) {
+      this.snackBar
+        .open('Debes iniciar sesión para guardar tu solución', 'Iniciar sesión', {
+          duration: 5000,
+        })
+        .onAction()
+        .subscribe(() => this.authService.login());
+      return;
+    }
 
     this.isSubmitting.set(true);
 
