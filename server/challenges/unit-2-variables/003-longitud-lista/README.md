@@ -1,8 +1,8 @@
 # Longitud de Lista
 
-## Descripcion
+## Descripción
 
-Tienes una lista de frutas. Imprime cuantos elementos tiene la lista.
+Tienes una lista de frutas. Imprime cuántos elementos tiene la lista.
 
 ## Ejemplo
 
@@ -15,5 +15,5 @@ Tienes una lista de frutas. Imprime cuantos elementos tiene la lista.
 ## Instrucciones
 
 1. Crea una lista `frutas` con los valores `["manzana", "banana", "naranja"]`.
-2. Usa la funcion `len()` para obtener la cantidad de elementos.
+2. Usa la función `len()` para obtener la cantidad de elementos.
 3. Imprime el resultado.

@@ -1,6 +1,6 @@
 # Concatenar Strings
 
-## Descripcion
+## Descripción
 
 Tienes dos variables `palabra1` y `palabra2` con los valores "Hola" y "Mundo". Imprime ambas palabras unidas con un espacio en medio.
 
