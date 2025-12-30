@@ -1,5 +1,10 @@
 # APSchool
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Angular-21.0.6-dd0031" alt="Angular">
+  <img src="https://img.shields.io/badge/Go-1.25.5-00add8" alt="Go">
+</p>
+
 Plataforma web para estudiantes de ESPOL para practicar Python con challenges interactivos. El codigo se ejecuta directamente en el navegador usando Pyodide (Python compilado a WebAssembly).
 
 **Demo:** https://d3ow6eel2jvdfj.cloudfront.net
@@ -47,13 +52,11 @@ Plataforma web para estudiantes de ESPOL para practicar Python con challenges in
 ## Stack
 
 ### Frontend
-- Angular 21 (Standalone Components, Signals)
-- Monaco Editor
-- Pyodide (WebAssembly)
-- Angular Material
+- Angular 21
+- Pyodide
 
 ### Backend
-- Go 1.21+
+- Go 1.25
 - Chi Router
 - PostgreSQL
 - GitHub OAuth + JWT
