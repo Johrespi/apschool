@@ -33,6 +33,9 @@
           @if (pyodideLoading()) {
             <span class="loading-text">Cargando Python...</span>
           }
+          @if (!isAuthenticated() && lastResult()?.success) {
+            <span class="auth-hint">Inicia sesión para guardar tu progreso</span>
+          }
           <button
             matButton="filled"
             (click)="onRun()"
