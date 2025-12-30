@@ -1,8 +1,8 @@
-# Funcion Saludo
+# Función Saludo
 
-## Descripcion
+## Descripción
 
-Crea una funcion `saludar(nombre)` que retorne el string "Hola, {nombre}!". Luego llama a la funcion con "Python" e imprime el resultado.
+Crea una función `saludar(nombre)` que retorne el string "Hola, {nombre}!". Luego llama a la función con "Python" e imprime el resultado.
 
 ## Ejemplo
 
@@ -14,6 +14,6 @@ Hola, Python!
 
 ## Instrucciones
 
-1. Define una funcion `saludar` que reciba un parametro `nombre`.
-2. La funcion debe retornar el string "Hola, " + nombre + "!".
-3. Llama a la funcion con "Python" e imprime el resultado.
+1. Define una función `saludar` que reciba un parámetro `nombre`.
+2. La función debe retornar el string "Hola, " + nombre + "!".
+3. Llama a la función con "Python" e imprime el resultado.

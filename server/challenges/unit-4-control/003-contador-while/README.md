@@ -1,8 +1,8 @@
 # Contar del 1 al 5
 
-## Descripcion
+## Descripción
 
-Usa un ciclo `for` con `range` para imprimir los numeros del 1 al 5, cada uno en una linea separada.
+Usa un ciclo `for` con `range` para imprimir los números del 1 al 5, cada uno en una línea separada.
 
 ## Ejemplo
 
@@ -18,5 +18,5 @@ Usa un ciclo `for` con `range` para imprimir los numeros del 1 al 5, cada uno en
 
 ## Instrucciones
 
-1. Usa un ciclo `for` con `range(1, 6)` para recorrer los numeros del 1 al 5.
-2. Imprime cada numero dentro del ciclo.
+1. Usa un ciclo `for` con `range(1, 6)` para recorrer los números del 1 al 5.
+2. Imprime cada número dentro del ciclo.

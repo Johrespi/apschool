@@ -1,6 +1,6 @@
-# Suma de Numeros
+# Suma de Números
 
-## Descripcion
+## Descripción
 
 Crea dos variables `a` y `b` con los valores 5 y 3 respectivamente. Luego imprime la suma de ambas.
 

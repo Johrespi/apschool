@@ -1,8 +1,8 @@
-# Suma de Tres Numeros
+# Suma de Tres Números
 
-## Descripcion
+## Descripción
 
-Crea una funcion `sumar(a, b, c)` que retorne la suma de tres numeros. Luego llama a la funcion con los valores 1, 2 y 3 e imprime el resultado.
+Crea una función `sumar(a, b, c)` que retorne la suma de tres números. Luego llama a la función con los valores 1, 2 y 3 e imprime el resultado.
 
 ## Ejemplo
 
@@ -14,6 +14,6 @@ Crea una funcion `sumar(a, b, c)` que retorne la suma de tres numeros. Luego lla
 
 ## Instrucciones
 
-1. Define una funcion `sumar` que reciba tres parametros: `a`, `b` y `c`.
-2. La funcion debe retornar la suma de los tres numeros.
-3. Llama a la funcion con 1, 2 y 3 e imprime el resultado.
+1. Define una función `sumar` que reciba tres parámetros: `a`, `b` y `c`.
+2. La función debe retornar la suma de los tres números.
+3. Llama a la función con 1, 2 y 3 e imprime el resultado.

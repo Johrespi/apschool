@@ -1,10 +1,10 @@
-# Hints
+# Pistas
 
-## Hint 1
-La funcion `print()` muestra texto en la consola.
+## Pista 1
+La función `print()` muestra texto en la consola.
 
-## Hint 2
+## Pista 2
 Los strings en Python se escriben entre comillas: `"texto"` o `'texto'`.
 
-## Hint 3
-La solucion es una sola linea: `print("Hello, World!")`
+## Pista 3
+La solución es una sola línea: `print("Hello, World!")`
