@@ -158,6 +158,11 @@
     color: var(--mat-sys-on-surface-variant);
     font-size: 0.875rem;
   }
+  .auth-hint {
+    color: var(--mat-sys-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
 }
 .loading {
   display: flex;
