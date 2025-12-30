@@ -1,8 +1,8 @@
 # Calcular el Doble
 
-## Descripcion
+## Descripción
 
-Crea una funcion `doble(n)` que retorne el doble del numero recibido. Luego llama a la funcion con el valor 5 e imprime el resultado.
+Crea una función `doble(n)` que retorne el doble del número recibido. Luego llama a la función con el valor 5 e imprime el resultado.
 
 ## Ejemplo
 
@@ -14,6 +14,6 @@ Crea una funcion `doble(n)` que retorne el doble del numero recibido. Luego llam
 
 ## Instrucciones
 
-1. Define una funcion `doble` que reciba un parametro `n`.
-2. La funcion debe retornar `n * 2`.
-3. Llama a la funcion con 5 e imprime el resultado.
+1. Define una función `doble` que reciba un parámetro `n`.
+2. La función debe retornar `n * 2`.
+3. Llama a la función con 5 e imprime el resultado.
