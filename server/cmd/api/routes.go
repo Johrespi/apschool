@@ -35,8 +35,8 @@ func (app *application) routes() http.Handler {
 	}))
 
 	r.Use(mw.RateLimitByIP(100, time.Minute))
-	r.Get("/", app.ping)
-	r.Get("/health", app.health)
+	r.Get("/api/ping", app.ping)
+	r.Get("/api/health", app.health)
 
 	//Auth routes
 	r.Route("/api/auth", func(r chi.Router) {
