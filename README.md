@@ -5,25 +5,25 @@
   <img src="https://img.shields.io/badge/Go-1.25.5-00add8" alt="Go">
 </p>
 
-Plataforma web para estudiantes de ESPOL para practicar Python con challenges interactivos. El codigo se ejecuta directamente en el navegador usando Pyodide (Python compilado a WebAssembly).
+A web platform for ESPOL students to practice Python through interactive coding challenges. Code runs directly in the browser using Pyodide (Python compiled to WebAssembly).
 
 **Demo:** https://d3ow6eel2jvdfj.cloudfront.net
 
 ## Screenshots
 
-| Home (sin login) | Home (con login) |
-|------------------|------------------|
+| Home (logged out) | Home (logged in) |
+|-------------------|------------------|
 | ![Home Unauth](images/apschool_home_unauth.png) | ![Home Auth](images/apschool_home_auth.png) |
 
-| Challenges | Challenge resuelto |
-|------------|-------------------|
+| Challenges | Challenge solved |
+|------------|------------------|
 | ![Challenges](images/apschool_challenges.png) | ![Test Passed](images/apschool_test_passed.png) |
 
 | GitHub OAuth |
 |--------------|
 | ![GitHub OAuth](images/apschool_github_oauth.png) |
 
-## Arquitectura
+## Architecture
 
 ```
 +--------------------------------------------------+
@@ -32,11 +32,11 @@ Plataforma web para estudiantes de ESPOL para practicar Python con challenges in
 |  |  Angular   |->|  Pyodide |<-| Monaco Editor | |
 |  +------------+  +----------+  +---------------+ |
 |        |              |                          |
-|        |         Ejecuta Python                  |
-|        |         Valida tests                    |
+|        |         Executes Python                 |
+|        |         Validates tests                 |
 |        |              |                          |
 |        v              v                          |
-|   Si pasa tests -> POST /api/submissions         |
+|   If tests pass -> POST /api/submissions         |
 +--------------------------------------------------+
                        |
                        v
@@ -61,34 +61,34 @@ Plataforma web para estudiantes de ESPOL para practicar Python con challenges in
 - PostgreSQL
 - GitHub OAuth + JWT
 
-### Infraestructura (AWS)
+### Infrastructure (AWS)
 - CloudFront + S3 (frontend)
 - EC2 + Docker (backend)
-- RDS PostgreSQL (base de datos)
+- RDS PostgreSQL (database)
 
 ## Features
 
-- Ejecucion de Python en el navegador (sin servidor)
-- Login con GitHub OAuth
-- 12 challenges organizados en 4 unidades
-- Editor de codigo con syntax highlighting
-- Sistema de pistas para cada challenge
+- Python execution in the browser (no server required)
+- GitHub OAuth login
+- 12 challenges organized in 4 units
+- Code editor with syntax highlighting
+- Hint system for each challenge
 
-## Por que Pyodide?
+## Why Pyodide?
 
-| Aspecto | Beneficio |
-|---------|-----------|
-| Costo | $0 - usa la CPU del usuario |
-| Seguridad | Codigo malicioso solo afecta al usuario que lo escribe |
-| Latencia | Instantanea (sin round-trip al servidor) |
-| Escalabilidad | 1 o 100,000 usuarios = mismo costo |
+| Aspect | Benefit |
+|--------|---------|
+| Cost | $0 - uses the user's CPU |
+| Security | Malicious code only affects the user who wrote it |
+| Latency | Instant (no round-trip to server) |
+| Scalability | 1 or 100,000 users = same cost |
 
-## Desarrollo Local
+## Local Development
 
-Ver instrucciones detalladas en:
+See detailed instructions at:
 - [Frontend (Angular)](web/README.md)
 - [Backend (Go)](server/README.md)
 
-## Autor
+## Author
 
 Johann Ramirez - johrespi@espol.edu.ec
