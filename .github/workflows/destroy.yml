@@ -1,0 +1,69 @@
+name: Destroy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Escribe "destroy" para confirmar la eliminacion total:'
+        required: true
+        type: string
+
+jobs:
+  destroy:
+    name: Destroy AWS Infrastructure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate Confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirmation }}" != "destroy" ]; then
+            echo "Error: Confirmacion rechazada. Ingresaste '${{ github.event.inputs.confirmation }}', pero debes escribir exactamente 'destroy'."
+            exit 1
+          fi
+          echo "Confirmacion valida. Iniciando eliminacion de la infraestructura..."
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.16.1"
+          terraform_wrapper: false
+
+      - name: Configure Environment Variables for Terraform
+        env:
+          TFVARS_CONTENT: ${{ secrets.PROD_TFVARS }}
+        run: |
+          printf '%s\n' "$TFVARS_CONTENT" > infra/environments/prod/terraform.tfvars
+
+      - name: Terraform Init
+        run: |
+          cd infra/environments/prod
+          terraform init
+
+      - name: Clean Frontend S3 Bucket
+        run: |
+          cd infra/environments/prod
+          S3_BUCKET=$(terraform output -raw s3_bucket_name 2>/dev/null || true)
+          if [ -n "$S3_BUCKET" ] && [ "$S3_BUCKET" != "No outputs found" ]; then
+            echo "Vaciando contenido de S3 bucket: $S3_BUCKET..."
+            aws s3 rm "s3://$S3_BUCKET" --recursive || true
+          fi
+
+      - name: Terraform Destroy
+        run: |
+          cd infra/environments/prod
+          terraform destroy -auto-approve
+
+      - name: Destroy Summary
+        run: |
+          echo "### Infraestructura APSchool Eliminada" >> $GITHUB_STEP_SUMMARY
+          echo "Todos los recursos en AWS fueron destruidos exitosamente para evitar costos." >> $GITHUB_STEP_SUMMARY

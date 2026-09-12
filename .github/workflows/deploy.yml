@@ -1,0 +1,109 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.16.1"
+          terraform_wrapper: false
+
+      - name: Configure Environment Variables for Terraform
+        env:
+          TFVARS_CONTENT: ${{ secrets.PROD_TFVARS }}
+        run: |
+          printf '%s\n' "$TFVARS_CONTENT" > infra/environments/prod/terraform.tfvars
+
+      - name: Terraform Init
+        run: |
+          cd infra/environments/prod
+          terraform init
+
+      - name: Step 1 - Provision ECR Repository
+        run: |
+          cd infra/environments/prod
+          terraform apply -target=module.ecr -auto-approve
+          ECR_URL=$(terraform output -raw ecr_repository_url)
+          echo "ECR_URL=$ECR_URL" >> $GITHUB_ENV
+
+      - name: Step 2 - Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Step 3 - Build, Tag, and Push Docker Image
+        run: |
+          echo "Building Docker image for linux/amd64..."
+          docker build --platform linux/amd64 -t "$ECR_URL:latest" ./server
+          echo "Pushing Docker image to ECR..."
+          docker push "$ECR_URL:latest"
+
+      - name: Step 4 - Full Infrastructure Provisioning
+        run: |
+          cd infra/environments/prod
+          terraform apply -auto-approve
+          
+          ASG_NAME=$(terraform output -raw asg_name)
+          S3_BUCKET=$(terraform output -raw s3_bucket_name)
+          CF_ID=$(terraform output -raw cloudfront_distribution_id)
+          CF_DOMAIN=$(terraform output -raw cloudfront_domain_name)
+          
+          echo "ASG_NAME=$ASG_NAME" >> $GITHUB_ENV
+          echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
+          echo "CF_ID=$CF_ID" >> $GITHUB_ENV
+          echo "CF_DOMAIN=$CF_DOMAIN" >> $GITHUB_ENV
+
+      - name: Step 5 - Trigger ASG Instance Refresh
+        run: |
+          echo "Triggering instance refresh for Auto Scaling Group: $ASG_NAME"
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name "$ASG_NAME" \
+            --strategy Rolling \
+            --preferences '{"MinHealthyPercentage": 0, "InstanceWarmup": 300}' || true
+
+      - name: Step 6 - Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.4"
+
+      - name: Step 7 - Build Angular Frontend
+        run: |
+          cd web
+          bun install --frozen-lockfile
+          bun run build
+
+      - name: Step 8 - Deploy Frontend to S3
+        run: |
+          echo "Syncing frontend build to s3://$S3_BUCKET..."
+          aws s3 sync ./web/dist/web/browser "s3://$S3_BUCKET" --delete
+
+      - name: Step 9 - Invalidate CloudFront Cache
+        run: |
+          echo "Invalidating CloudFront cache for Distribution ID: $CF_ID..."
+          aws cloudfront create-invalidation --distribution-id "$CF_ID" --paths "/*"
+
+      - name: Deployment Summary
+        run: |
+          echo "### APSchool Desplegado Exitosamente" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Recurso | Detalle |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **URL Pública (CloudFront)** | https://$CF_DOMAIN |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Bucket S3 Frontend** | \`$S3_BUCKET\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Repositorio ECR** | \`$ECR_URL\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Auto Scaling Group** | \`$ASG_NAME\` |" >> $GITHUB_STEP_SUMMARY
