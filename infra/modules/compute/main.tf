@@ -87,7 +87,7 @@ resource "aws_launch_template" "this" {
     systemctl start docker && systemctl enable docker
     aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${var.ecr_repository_url}
     docker pull ${var.ecr_repository_url}:latest
-    docker run -d --name apschool-api --restart always -p 8080:8080 -e APSCHOOL_DB_HOST="${var.db_host}" -e APSCHOOL_DB_PORT="${var.db_port}" -e APSCHOOL_DB_DATABASE="${var.db_name}" -e APSCHOOL_DB_USERNAME="${var.db_username}" -e APSCHOOL_DB_PASSWORD="${var.db_password}" -e APSCHOOL_DB_SCHEMA="public" -e APSCHOOL_DB_SSLMODE="disable" -e PORT="${var.app_port}" -e JWT_SECRET="${var.jwt_secret}" -e GITHUB_CLIENT_ID="${var.github_client_id}" -e GITHUB_CLIENT_SECRET="${var.github_client_secret}" ${var.ecr_repository_url}:latest
+    docker run -d --name apschool-api --restart always -p 8080:8080 -e APSCHOOL_DB_HOST="${var.db_host}" -e APSCHOOL_DB_PORT="${var.db_port}" -e APSCHOOL_DB_DATABASE="${var.db_name}" -e APSCHOOL_DB_USERNAME="${var.db_username}" -e APSCHOOL_DB_PASSWORD="${var.db_password}" -e APSCHOOL_DB_SCHEMA="public" -e APSCHOOL_DB_SSLMODE="require" -e PORT="${var.app_port}" -e JWT_SECRET="${var.jwt_secret}" -e GITHUB_CLIENT_ID="${var.github_client_id}" -e GITHUB_CLIENT_SECRET="${var.github_client_secret}" ${var.ecr_repository_url}:latest
     sleep 5 && docker exec apschool-api ./seed 
   EOF
   )
